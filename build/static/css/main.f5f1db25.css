@@ -1,0 +1,617 @@
+html {
+  font-size: 16px;
+  padding: 0;
+  margin: 0;
+}
+
+*, *:after, *:before {
+  box-sizing: border-box;
+}
+body {
+  padding: 0;
+  margin: 0;
+  font-size: 1rem;
+  font-family: Roboto, sans-serif;
+}
+
+button:focus, a:focus {
+    outline: none;
+  }
+
+button:hover, a:hover {
+    cursor: pointer;
+  }
+
+.button {
+  border: 0;
+  padding: 0;
+}
+
+.button--small {
+  display: inline-flex;
+  align-items: center;
+  height: 1.25rem;
+  padding: 0.125rem 0.625rem;
+  border: 1px solid #DAE3ED;
+  border-radius: 1.25rem;
+  font-size: 0.75rem;
+  line-height: 0.875rem;
+  color: #BDBDBD;
+}
+
+.button--link {
+  border: none;
+  padding: 0;
+  color: #0079F2;
+  font-size: 14px;
+  line-height: 16px;
+  text-transform: capitalize;
+  margin-right: 1.25rem;
+
+}
+
+.main {
+  display: flex;
+  height: calc(100vh - 6.25rem);
+}
+
+.col__left {
+  flex-shrink: 0;
+  width: 7.5rem;
+  background: #C9D5DB;
+}
+
+.col__right {
+  padding: 2.5rem;
+  width: 100%;
+}
+
+.form__2col {
+  display: flex;
+}
+
+.form__2col > div {
+    width: 50%;
+  }
+
+input {
+  padding: 0 1.25rem;
+  color: #0A4A6B;
+  font-size: 1rem;
+  line-height: 1.1875rem;
+  font-family: inherit;
+}
+
+.col__left ul {
+    margin: 0;
+    padding: 0;
+    font-size: 0.75rem;
+    line-height: 0.875rem;
+
+  }
+
+.col__left ul a {
+      display: inline-flex;
+      width: 100%;
+      align-items: center;
+      text-decoration: none;
+      color: #0A4A6B;
+      height: 2.5rem;
+      padding-left: 1.25rem;
+      border-bottom: 1px solid #DAE3ED;
+    }
+
+.filter--view {
+  margin-bottom: 1.125rem;
+}
+
+.filters {
+  margin-bottom: 1.75rem;
+}
+
+.filters label {
+    margin-right: 1.25rem;
+    color: #80A6CC;
+    font-size: 0.5625rem;
+    line-height: 0.6875rem;
+    text-transform: uppercase;
+  }
+.link--filter {
+  position: relative;
+  color: #80A6CC;
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  background: transparent;
+  border: none;
+  margin-right: 0.625rem;
+}
+.link--filter:after {
+    content: '';
+    display: block;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background: #80A6CC;
+    position: absolute;
+    right: -0.375rem;
+    top: 50%;
+  }
+.link--filter:last-child:after {
+    display: none;
+  }
+
+.button--filter {
+  height: 1.875rem;
+  border-radius: 1.25rem;
+  border: 1px solid #DAE3ED;
+  padding: 0 0.9375rem;
+  font-size: 0.875rem;
+  line-height: 1rem;
+  margin-right: 0.625rem;
+}
+
+.button--filter.-active {
+    background: #F2F2F2;
+  }
+
+.avatar {
+  background: #C9D5DB;
+  padding: 1.25rem 2.5rem 1.25rem 1.25rem;
+  flex-shrink: 0;
+}
+
+  .avatar__circle {
+    width: 3.75rem;
+    height: 3.75rem;
+    background: #CCA2EE;
+    border-radius: 50%;
+  }
+
+.event_selector {
+  /*display: flex;*/
+  margin-top: 1.125rem;
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+  flex-grow: 1;
+}
+  .event_selector label {
+    display: block;
+    font-size: 0.5625rem;
+    line-height: 0.6875rem;
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+    color: #80A6CC;
+  }
+  .event_selector__select {
+    cursor: pointer;
+  }
+  .event_selector__select, .event_selector__tools {
+    display: flex;
+    align-items: center;
+  }
+  .event_selector__wrapper {
+    position: relative;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    width: 100%;
+    height: 2.5rem;
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #DAE3ED;
+  }
+  .event_selector__time_left {
+    margin-left: 0.9375rem;
+    color: #0A4A6B;
+    font-weight: bold;
+    line-height: 1.1875rem;
+    font-size: 1rem;
+  }
+  .event_selector__date {
+    color: #0079F2;
+  }
+  .event_selector__title {
+    margin-left: 0.9375rem;
+    font-size: 1.25rem;
+    line-height: 1.4375rem;
+    color: #0A4A6B;
+  }
+  .event_selector__list {
+    background: #fff;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    border: 1px solid #DAE3ED;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+  .event_selector__list ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+  .event_selector__list li {
+      padding: 0.625rem 0;
+      cursor: pointer;
+    }
+
+.header {
+  background: #EEF3F9;
+}
+  .header__line {
+     display: flex;
+  }
+  .header input {
+    border: 1px solid #DAE3ED;
+    height: 2.5rem;
+  }
+  .header ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .header ul li a {
+      width: 7.5rem;
+      display: inline-flex;
+      height: 2.5rem;
+      align-items: center;
+      padding: 0 1.25rem;
+      margin: 0 1px;
+      font-size: 0.875rem;
+      line-height: 1rem;
+      text-decoration: none;
+      color: #0A4A6B;
+      background: #C9D5DB;
+    }
+  .header ul li a.link--create {
+        background: #0079F2;
+        color: #fff;
+        font-weight: bold;
+      }
+  .header ul li a.active {
+        color: #fff;
+        background: #054A91;
+      }
+
+
+.text_field {
+  margin-bottom: 1.25rem;
+}
+  .text_field label {
+    margin-bottom: 0.125rem;
+    display: block;
+    color: #80A6CC;
+    font-size: 9px;
+    line-height: 11px;
+    text-transform: uppercase;
+  }
+  .text_field input {
+    border: 1px solid #DAE3ED;
+    height: 40px;
+    width: 100%;
+    max-width: 500px;
+  }
+
+.text-area {
+  margin-bottom: 1.25rem;
+}
+
+  .text-area label {
+    margin-bottom: 0.125rem;
+    display: block;
+    color: #80A6CC;
+    font-size: 9px;
+    line-height: 11px;
+    text-transform: uppercase;
+  }
+
+  .text-area textarea {
+    border: 1px solid #DAE3ED;
+    min-height: 10.0625rem;
+    max-width: 31.25rem;
+    width: 100%;
+  }
+
+/* DayPicker styles */
+
+.DayPicker {
+  display: inline-block;
+  font-size: 1rem;
+}
+
+.DayPicker-wrapper {
+  position: relative;
+
+  flex-direction: row;
+  padding-bottom: 1em;
+
+  -webkit-user-select: none;
+
+     -moz-user-select: none;
+
+      -ms-user-select: none;
+
+          user-select: none;
+}
+
+.DayPicker-Months {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.DayPicker-Month {
+  display: table;
+  margin: 0 1em;
+  margin-top: 1em;
+  border-spacing: 0;
+  border-collapse: collapse;
+
+  -webkit-user-select: none;
+
+     -moz-user-select: none;
+
+      -ms-user-select: none;
+
+          user-select: none;
+}
+
+.DayPicker-NavBar {
+}
+
+.DayPicker-NavButton {
+  position: absolute;
+  top: 1em;
+  right: 1.5em;
+  left: auto;
+
+  display: inline-block;
+  margin-top: 2px;
+  width: 1.25em;
+  height: 1.25em;
+  background-position: center;
+  background-size: 50%;
+  background-repeat: no-repeat;
+  color: #8B9898;
+  cursor: pointer;
+}
+
+.DayPicker-NavButton:hover {
+  opacity: 0.8;
+}
+
+.DayPicker-NavButton--prev {
+  margin-right: 1.5em;
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAwCAYAAAB5R9gVAAAABGdBTUEAALGPC/xhBQAAAVVJREFUWAnN2G0KgjAYwPHpGfRkaZeqvgQaK+hY3SUHrk1YzNLay/OiEFp92I+/Mp2F2Mh2lLISWnflFjzH263RQjzMZ19wgs73ez0o1WmtW+dgA01VxrE3p6l2GLsnBy1VYQOtVSEH/atCCgqpQgKKqYIOiq2CBkqtggLKqQIKgqgCBjpJ2Y5CdJ+zrT9A7HHSTA1dxUdHgzCqJIEwq0SDsKsEg6iqBIEoq/wEcVRZBXFV+QJxV5mBtlDFB5VjYTaGZ2sf4R9PM7U9ZU+lLuaetPP/5Die3ToO1+u+MKtHs06qODB2zBnI/jBd4MPQm1VkY79Tb18gB+C62FdBFsZR6yeIo1YQiLJWMIiqVjQIu1YSCLNWFgijVjYIuhYYCKoWKAiiFgoopxYaKLUWOii2FgkophYp6F3r42W5A9s9OcgNvva8xQaysKXlFytoqdYmQH6tF3toSUo0INq9AAAAAElFTkSuQmCC');
+}
+
+.DayPicker-NavButton--next {
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAwCAYAAAB5R9gVAAAABGdBTUEAALGPC/xhBQAAAXRJREFUWAnN119ugjAcwPHWzJ1gnmxzB/BBE0n24m4xfNkTaOL7wOtsl3AXMMb+Vjaa1BG00N8fSEibPpAP3xAKKs2yjzTPH9RAjhEo9WzPr/Vm8zgE0+gXATAxxuxtqeJ9t5tIwv5AtQAApsfT6TPdbp+kUBcgVwvO51KqVhMkXKsVJFXrOkigVhCIs1Y4iKlWZxB1rX4gwlpRIIpa8SDkWmggrFq4IIRaJKCYWnSgnrXIQV1r8YD+1Vrn+bReagysIFfLABRt31v8oBu1xEBttfRbltmfjgEcWh9snUS2kNdBK6WN1vrOWxObWsz+fjxevsxmB1GQDfINWiev83nhaoiB/CoOU438oPrhXS0WpQ9xc1ZQWxWHqUYe0I0qrKCQKjygDlXIQV2r0IF6ViEBxVTBBSFUQQNhVYkHIVeJAtkNsbQ7c1LtzP6FsObhb2rCKv7NBIGoq4SDmKoEgTirXAcJVGkFSVVpgoSrXICGUMUH/QBZNSUy5XWUhwAAAABJRU5ErkJggg==');
+}
+
+.DayPicker-NavButton--interactionDisabled {
+  display: none;
+}
+
+.DayPicker-Caption {
+  display: table-caption;
+  margin-bottom: 0.5em;
+  padding: 0 0.5em;
+  text-align: left;
+}
+
+.DayPicker-Caption > div {
+  font-weight: 500;
+  font-size: 1.15em;
+}
+
+.DayPicker-Weekdays {
+  display: table-header-group;
+  margin-top: 1em;
+}
+
+.DayPicker-WeekdaysRow {
+  display: table-row;
+}
+
+.DayPicker-Weekday {
+  display: table-cell;
+  padding: 0.5em;
+  color: #8B9898;
+  text-align: center;
+  font-size: 0.875em;
+}
+
+.DayPicker-Weekday abbr[title] {
+  border-bottom: none;
+  text-decoration: none;
+}
+
+.DayPicker-Body {
+  display: table-row-group;
+}
+
+.DayPicker-Week {
+  display: table-row;
+}
+
+.DayPicker-Day {
+  display: table-cell;
+  padding: 0.5em;
+  border-radius: 50%;
+  vertical-align: middle;
+  text-align: center;
+  cursor: pointer;
+}
+
+.DayPicker-WeekNumber {
+  display: table-cell;
+  padding: 0.5em;
+  min-width: 1em;
+  border-right: 1px solid #EAECEC;
+  color: #8B9898;
+  vertical-align: middle;
+  text-align: right;
+  font-size: 0.75em;
+  cursor: pointer;
+}
+
+.DayPicker--interactionDisabled .DayPicker-Day {
+  cursor: default;
+}
+
+.DayPicker-Footer {
+  padding-top: 0.5em;
+}
+
+.DayPicker-TodayButton {
+  border: none;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  color: #4A90E2;
+  font-size: 0.875em;
+  cursor: pointer;
+}
+
+/* Default modifiers */
+
+.DayPicker-Day--today {
+  color: #D0021B;
+  font-weight: 700;
+}
+
+.DayPicker-Day--outside {
+  color: #8B9898;
+  cursor: default;
+}
+
+.DayPicker-Day--disabled {
+  color: #DCE0E0;
+  cursor: default;
+  /* background-color: #eff1f1; */
+}
+
+/* Example modifiers */
+
+.DayPicker-Day--sunday {
+  background-color: #F7F8F8;
+}
+
+.DayPicker-Day--sunday:not(.DayPicker-Day--today) {
+  color: #DCE0E0;
+}
+
+.DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {
+  position: relative;
+
+  background-color: #4A90E2;
+  color: #F0F8FF;
+}
+
+.DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside):hover {
+  background-color: #51A0FA;
+}
+
+.DayPicker:not(.DayPicker--interactionDisabled)
+  .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {
+  background-color: #F0F8FF;
+}
+
+/* DayPickerInput */
+
+.DayPickerInput {
+  display: inline-block;
+}
+
+.DayPickerInput-OverlayWrapper {
+  position: relative;
+}
+
+.DayPickerInput-Overlay {
+  position: absolute;
+  left: 0;
+  z-index: 1;
+
+  background: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+.date {
+  position: relative;
+}
+  .date__popup {
+    display: flex;
+    position: absolute;
+    top: 3.75rem;
+    background: #fff;
+    border: 1px solid #DAE3ED;
+
+  }
+
+
+.color {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+.color__swatch {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+.color__popover {
+  position: absolute;
+  z-index: 2;
+}
+
+.dashboard .DayPicker-Day {
+    font-size: 0.75rem;
+    line-height: 0.875rem;
+    color: #0079F2;
+    padding: 0.25rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 0;
+  }
+  .dashboard .DayPicker-Month {
+    margin-left: 0;
+    margin-right: 2.5rem;
+    margin-bottom: 1.25rem;
+    width: 8.75rem;
+  }
+  .dashboard .DayPicker-Months {
+    justify-content: flex-start;
+  }
+  .dashboard .DayPicker-Weekday {
+    color: #80A6CC;
+    font-size: 0.5rem;
+    line-height: 0.5625rem;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  .dashboard .DayPicker-Caption {
+    color: #054A91;
+    font-size: 1rem;
+    line-height: 1.1875rem;
+    margin-bottom: 1.25rem;
+  }
+  .dashboard .DayPicker-Day--start {
+    border-bottom-left-radius: 50%;
+    border-top-left-radius: 50%;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .dashboard .DayPicker-Day--end {
+    border-bottom-right-radius: 50%;
+    border-top-right-radius: 50%;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  .dashboard .DayPicker-Day--outside {
+    background: transparent!important;
+  }
+
