@@ -12,7 +12,11 @@ module.exports = env => {
     // },
     output: {
       path: path.resolve(__dirname, "build"),
-      filename: () => isProduction ? 'static/js/[name].[chunkhash:8].js' : 'static/js/bundle.js'
+      filename: () => isProduction ? 'static/js/[name].[chunkhash:8].js' : 'static/js/bundle.js',
+      publicPath: '/',
+    },
+    devServer: {
+      historyApiFallback: true,
     },
     module: {
       rules: [
@@ -87,7 +91,10 @@ module.exports = env => {
         filename: isProduction ? 'static/css/[name].[hash:8].css' : 'static/css/[name].css',
         chunkFilename: isProduction ? 'static/css/[id].[hash:8].css' : 'static/css/[id].css',
       }),
-    ]
+    ],
+    resolve: {
+      modules: [path.resolve(__dirname, 'src'), 'node_modules']
+    }
   }
 
 };

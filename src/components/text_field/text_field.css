@@ -1,0 +1,18 @@
+.text_field {
+  margin-bottom: 20pr;
+  label {
+    margin-bottom: 2pr;
+    display: block;
+    color: #80A6CC;
+    font-size: 9px;
+    line-height: 11px;
+    text-transform: uppercase;
+  }
+
+  input {
+    border: 1px solid #DAE3ED;
+    height: 40px;
+    width: 100%;
+    max-width: 500px;
+  }
+}

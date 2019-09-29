@@ -1,0 +1,13 @@
+
+.color {
+  width: 40pr;
+  height: 40pr;
+}
+.color__swatch {
+  width: 40pr;
+  height: 40pr;
+}
+.color__popover {
+  position: absolute;
+  z-index: 2;
+}

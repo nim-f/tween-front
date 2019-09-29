@@ -1,0 +1,11 @@
+.date {
+  position: relative;
+  &__popup {
+    display: flex;
+    position: absolute;
+    top: 60pr;
+    background: #fff;
+    border: 1px solid #DAE3ED;
+
+  }
+}

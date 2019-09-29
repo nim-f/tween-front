@@ -1,0 +1,43 @@
+.header {
+  background: #EEF3F9;
+  &__line {
+     display: flex;
+  }
+  input {
+    border: 1px solid #DAE3ED;
+    height: 40pr;
+  }
+
+  ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li a {
+      width: 120pr;
+      display: inline-flex;
+      height: 40pr;
+      align-items: center;
+      padding: 0 20pr;
+      margin: 0 1px;
+      font-size: 14pr;
+      line-height: 16pr;
+      text-decoration: none;
+      color: #0A4A6B;
+      background: #C9D5DB;
+
+      &.link--create {
+        background: #0079F2;
+        color: #fff;
+        font-weight: bold;
+      }
+
+      &.active {
+        color: #fff;
+        background: #054A91;
+      }
+    }
+  }
+}
+

@@ -1,0 +1,12 @@
+.avatar {
+  background: #C9D5DB;
+  padding: 20pr 40pr 20pr 20pr;
+  flex-shrink: 0;
+
+  &__circle {
+    width: 60pr;
+    height: 60pr;
+    background: #CCA2EE;
+    border-radius: 50%;
+  }
+}

@@ -1,7 +1,160 @@
 html {
   font-size: 16px;
+  padding: 0;
+  margin: 0;
+}
+
+*, *:after, *:before {
+  box-sizing: border-box;
 }
 body {
-  font-size: 24pr;
-  color: red;
+  padding: 0;
+  margin: 0;
+  font-size: 16pr;
+  font-family: Roboto, sans-serif;
+}
+
+button, a {
+  &:focus {
+    outline: none;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.button {
+  border: 0;
+  padding: 0;
+}
+
+.button--small {
+  display: inline-flex;
+  align-items: center;
+  height: 20pr;
+  padding: 2pr 10pr;
+  border: 1px solid #DAE3ED;
+  border-radius: 20pr;
+  font-size: 12pr;
+  line-height: 14pr;
+  color: #BDBDBD;
+}
+
+.button--link {
+  border: none;
+  padding: 0;
+  color: #0079F2;
+  font-size: 14px;
+  line-height: 16px;
+  text-transform: capitalize;
+  margin-right: 20pr;
+
+}
+
+.main {
+  display: flex;
+  height: calc(100vh - 100pr);
+}
+
+.col__left {
+  flex-shrink: 0;
+  width: 120pr;
+  background: #C9D5DB;
+}
+
+.col__right {
+  padding: 40pr;
+  width: 100%;
+}
+
+.form__2col {
+  display: flex;
+
+  & > div {
+    width: 50%;
+  }
+}
+
+input {
+  padding: 0 20pr;
+  color: #0A4A6B;
+  font-size: 16pr;
+  line-height: 19pr;
+  font-family: inherit;
+}
+
+.col__left {
+  ul {
+    margin: 0;
+    padding: 0;
+    font-size: 12pr;
+    line-height: 14pr;
+    a {
+      display: inline-flex;
+      width: 100%;
+      align-items: center;
+      text-decoration: none;
+      color: #0A4A6B;
+      height: 40pr;
+      padding-left: 20pr;
+      border-bottom: 1px solid #DAE3ED;
+    }
+
+  }
+}
+
+.filter--view {
+  margin-bottom: 18pr;
+}
+
+.filters {
+  margin-bottom: 28pr;
+
+  label {
+    margin-right: 20pr;
+    color: #80A6CC;
+    font-size: 9pr;
+    line-height: 11pr;
+    text-transform: uppercase;
+  }
+}
+.link--filter {
+  position: relative;
+  color: #80A6CC;
+  font-size: 14pr;
+  line-height: 24pr;
+  background: transparent;
+  border: none;
+  margin-right: 10pr;
+
+  &:after {
+    content: '';
+    display: block;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background: #80A6CC;
+    position: absolute;
+    right: -6pr;
+    top: 50%;
+  }
+
+  &:last-child:after {
+    display: none;
+  }
+}
+
+.button--filter {
+  height: 30pr;
+  border-radius: 20pr;
+  border: 1px solid #DAE3ED;
+  padding: 0 15pr;
+  font-size: 14pr;
+  line-height: 16pr;
+  margin-right: 10pr;
+
+  &.-active {
+    background: #F2F2F2;
+  }
 }
