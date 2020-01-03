@@ -12,7 +12,7 @@ export const fetchInstance = {
     return fetch(url, opts).then(r => {
       if (r.status >= 400) {
         return r.json().then(data => {
-          throw { ...data.error, status: r.status }
+          throw { error: data.errors, status: r.status }
         })
       } else {
         return r.json()

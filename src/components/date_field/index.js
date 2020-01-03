@@ -7,15 +7,15 @@ import './date_field.css'
 
 export default function DateInput(props) {
   const handleDayClickStart = (day) => {
-    props.onChange('start', day.toISOString())
+    props.onChange({...props.value, start: day.toISOString()})
   }
   const handleDayClickEnd = (day) => {
-    props.onChange('end', day.toISOString())
+    props.onChange({...props.value, end: day.toISOString()})
   }
 
   const [isOpen, setOpen] = useState(false)
-  const start = props.value.start ? DateTime.fromISO(props.value.start).toLocaleString() : ''
-  const end = props.value.end ? DateTime.fromISO(props.value.end).toLocaleString()  : ''
+  const start = props.value && props.value.start ? DateTime.fromISO(props.value.start).toLocaleString() : ''
+  const end = props.value && props.value.end ? DateTime.fromISO(props.value.end).toLocaleString()  : ''
 
   return (
     <div className="date text_field">
@@ -25,6 +25,8 @@ export default function DateInput(props) {
                readOnly
                onFocus={() => setOpen(true)}
         />
+        {props.error && <div className="field-error">{props.error}</div>}
+
         {isOpen ?
           <div className="date__popup">
             <div className="date__calendar">

@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import './event_selector.css'
-import eventsStore from 'store/events'
-import { observer } from "mobx-react"
 import OutsideWrapper from 'components/click_outside_wrapper'
 
-const  EventSelector = observer((props) => {
-
+const  EventSelector = (props) => {
+  console.log(props.list)
   const [isOpen, setOpen] = useState(false)
 
-  const currentEvent = props.events.find(event => event.id === props.currentEventId)
+  const select = id => {
+    props.setCurrent(id)
+    setOpen(false)
+  }
+
   return (
     <div className="event_selector">
       <label>The event you are working with:</label>
@@ -17,7 +19,7 @@ const  EventSelector = observer((props) => {
           <div className="event_selector__select" onClick={() => setOpen(!isOpen)}>
             <div className="event_selector__arrow" />
             <div className="event_selector__date">July 15-19, 2019 </div>
-            <div className="event_selector__title">{currentEvent && currentEvent.title}</div>
+            <div className="event_selector__title">{props.current && props.current.title.value}</div>
           </div>
 
           <div className="event_selector__tools">
@@ -27,7 +29,8 @@ const  EventSelector = observer((props) => {
           { isOpen ?
             <div className="event_selector__list">
               <ul>
-                {props.events.map(item => (<li key={item.id} onClick={() => eventsStore.setCurrentEvent(item.id)}>{item.title}</li>))}
+                {props.list.map(item => {
+                  return <li onClick={() => select(item)}>{props.events[item].title.value}</li>})}
               </ul>
             </div>
             : null }
@@ -37,7 +40,7 @@ const  EventSelector = observer((props) => {
 
     </div>
   );
-})
+}
 
 
 export default EventSelector

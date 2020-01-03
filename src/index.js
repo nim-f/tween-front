@@ -1,51 +1,53 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Switch, Route, BrowserRouter as Router, NavLink } from 'react-router-dom'
+import { ConnectedRouter } from 'connected-react-router'
+import { Provider } from 'react-redux'
 import './index.css'
+import 'react-day-picker/lib/style.css';
+
 import Header from 'components/header'
+import Notification from 'components/notification'
 import NewEvent from './pages/events/new_event'
 import Register from './pages/register'
-import Login from './pages/login'
 import Dashboard from './pages/dashboard'
+import Event from './pages/event'
+import createStore from 'reduxConfig'
 
-console.log('working')
+import Login from './pages/login'
+import Sidebar from './components/sidebar';
+const { store, history } = createStore()
+
 const App = () => (
-  <Router>
-  <div>
+  <Provider store={store}>
 
-    <Header></Header>
-    <div className="main">
-      <div className="col__left">
-        <ul>
-          <li>
-            <NavLink to="/">Detailed status</NavLink>
-          </li>
-          <li>
-            <NavLink to="/">Reports</NavLink>
-          </li>
-          <li>
-            <NavLink to="/">Filters</NavLink>
-          </li>
-          <li>
-            <NavLink to="/">Activity log</NavLink>
-          </li>
-        </ul>
+    <ConnectedRouter history={history}>
+    <div>
+
+      <Switch>
+        <Route path="/login" render={() => null} />
+        <Route path="/" render={() => <Header />} />
+      </Switch>
+      <div className="main">
+        <Switch>
+          <Route path="/login" render={() => null} />
+          <Route path="/" render={() => <Sidebar />} />
+        </Switch>
+
+        <div className="col__right">
+            <Switch>
+              <Route path="/login" component={Login}  />
+              <Route path="/register" component={Register} />
+              <Route path="/event/create" component={NewEvent} exact />
+              <Route path="/event/:id" component={Event} exact />
+              <Route path="/" component={Dashboard} exact />
+            </Switch>
+        </div>
       </div>
-      <div className="col__right">
-
-          <Switch>
-            <Route path="/login" component={Login} />
-            <Route path="/workflow" component={Dashboard} />
-            <Route path="/register" component={Register} />
-            <Route path="/event/create" component={NewEvent} />
-            <Route path="/event/:id" component={NewEvent} />
-          </Switch>
-
-      </div>
+      <Notification />
     </div>
-
-  </div>
-  </Router>
+    </ConnectedRouter>
+  </Provider>
 )
 const wrapper = document.getElementById("App");
 ReactDOM.render(<App />, wrapper)

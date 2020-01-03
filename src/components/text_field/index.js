@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './text_field.css'
 
-function TextField(props) {
+function TextField({label, error, name, onChange, value}) {
   return (
     <div className="text_field">
-      { props.label ? <label>{props.label}</label> : null}
-      <input value={props.value || ''} onChange={props.onChange || null} name={props.name || ''}/>
+      { label ? <label>{label}</label> : null}
+      <input value={value || ''} onChange={onChange || null} name={name || ''}/>
+      {error && <div className="field-error">{error}</div>}
     </div>
   );
 

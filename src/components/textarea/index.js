@@ -1,7 +1,6 @@
 import React from 'react';
-import { observer } from 'mobx-react'
 import './textarea.css'
-export default observer(function TextArea(props) {
+export default function TextArea(props) {
   console.log(props.value)
   return (
     <div className="text-area">
@@ -9,4 +8,4 @@ export default observer(function TextArea(props) {
       <textarea value={props.value} onChange={props.onChange}/>
     </div>
   );
-})
+}

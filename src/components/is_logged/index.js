@@ -1,18 +1,14 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import { observer } from 'mobx-react';
-import usersStore from 'store/users'
+import {connect} from 'react-redux'
+import { tokenSelector } from '../../ducks/login';
 
 export default function IsLogged(Component) {
-  @observer
-  class Authenticate extends React.Component {
-    render () {
-      console.log(usersStore)
-      if (usersStore.token) return <Component {...this.props} />
-
-      return <Redirect to="/login" />;
-    }
+  function Authenticate ({token, ...rest}) {
+    if (token) return <Component {...rest} />
+    return <Redirect to="/login" />;
   }
-
-  return Authenticate
+  return connect(state => ({
+    token: tokenSelector(state)
+  }))(Authenticate)
 }

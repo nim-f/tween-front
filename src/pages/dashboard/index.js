@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
 import DayPicker from 'react-day-picker';
+import {connect} from 'react-redux'
+import { DateTime } from 'luxon';
 import './dashboard.css'
-import eventStore from 'store/events.js'
-import {observer} from 'mobx-react';
-import {toJS} from 'mobx';
+import { eventsListSelector, eventsSelector } from '../../ducks/event';
+import IsLogged from '../../components/is_logged';
 
 const calendarSettings = {
   year: {
@@ -28,31 +29,47 @@ const calendarSettings = {
   },
 }
 
-export default observer(function Dashboard() {
+function Dashboard({events, list, history}) {
   const [view, setView] = useState('overview')
   const [filter, setFilter] = useState('year')
+  const [dayEvents, setDayEvents] = useState([])
+  console.log({events})
 
-  const events = toJS(eventStore.events)
+  const onDayClick = day => {
+    const selectedDay = DateTime.fromISO(day)
+    const dayEvents = list.filter(item => {
+      const start = DateTime.fromISO(events[item].start.value)
+      const end = DateTime.fromISO(events[item].end.value)
+      return selectedDay.ts > start.ts && selectedDay.ts < end.ts
+    })
+    console.log({dayEvents})
+    if (dayEvents.length > 1) {
+      setDayEvents(dayEvents)
+    } else {
+      history.push(`/event/${dayEvents[0]}`)
+    }
+  }
 
   const modifiers = {
-    start: events.map(item => (new Date(item.start.value))),
-    end: events.map(item => (new Date(item.end.value))),
+    start: list.map(item => (new Date(events[item].start.value))),
+    end: list.map(item => (new Date(events[item].end.value))),
   }
 
   const modifiersStyles = {
   }
 
-  events.forEach(item => {
-    modifiersStyles[`event_${item.id}`] = {
-      backgroundColor: item.color.value,
+  list.forEach(item => {
+    const event = events[item]
+    modifiersStyles[`event_${event.id}`] = {
+      backgroundColor: event.color.value,
       opacity: 0.7,
     }
 
-    let start = new Date(item.start.value)
-    let end = new Date(item.end.value)
+    let start = new Date(event.start.value)
+    let end = new Date(event.end.value)
     start.setDate(start.getDate() - 1)
     end.setDate(end.getDate() + 1)
-    modifiers[`event_${item.id}`] = { after: start, before: end }
+    modifiers[`event_${event.id}`] = { after: start, before: end }
   })
 
   console.log('modifiersStyles', modifiersStyles)
@@ -89,6 +106,7 @@ export default observer(function Dashboard() {
         {...calendarSettings[filter]}
         modifiers={modifiers}
         modifiersStyles={modifiersStyles}
+        onDayClick={onDayClick}
       />
 
       <h2>Short status (year)</h2>
@@ -101,4 +119,10 @@ export default observer(function Dashboard() {
       </p>
     </div>
   );
-})
+}
+export default IsLogged(
+  connect(state => ({
+    events: eventsSelector(state),
+    list: eventsListSelector(state),
+  }), null)(Dashboard)
+)

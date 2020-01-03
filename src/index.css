@@ -54,7 +54,7 @@ button, a {
 
 .main {
   display: flex;
-  height: calc(100vh - 100pr);
+  min-height: calc(100vh - 100pr);
 }
 
 .col__left {
@@ -157,4 +157,7 @@ input {
   &.-active {
     background: #F2F2F2;
   }
+}
+.field-error {
+  color: red;
 }
