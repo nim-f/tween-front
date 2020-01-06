@@ -1,5 +1,7 @@
 .dashboard {
+
   .DayPicker-Day {
+    position: relative;
     font-size: 12pr;
     line-height: 14pr;
     color: #0079F2;
@@ -35,14 +37,14 @@
     margin-bottom: 20pr;
   }
 
-  .DayPicker-Day--start {
+  .day__start {
     border-bottom-left-radius: 50%;
     border-top-left-radius: 50%;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
 
-  .DayPicker-Day--end {
+  .day__end {
     border-bottom-right-radius: 50%;
     border-top-right-radius: 50%;
     border-top-left-radius: 0;
@@ -51,4 +53,18 @@
   .DayPicker-Day--outside {
     background: transparent!important;
   }
+}
+
+.day__bg {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.day__date {
+  position: relative;
+  z-index: 10;
 }

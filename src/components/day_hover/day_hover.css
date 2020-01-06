@@ -1,0 +1,27 @@
+.day__hover {
+  position: absolute;
+  min-width: 160px;
+  border-radius: 5px;
+  background-color: #E8F2FF;
+  font-size: 12px;
+  line-height: 14px;
+  padding: 10px;
+  color: $textBlue;
+  z-index: 1000;
+  pointer-events: none;
+  .popup__title {
+    margin-bottom: 15px;
+  }
+
+  &__event {
+    border-bottom: 1px solid $textBlue;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+
+    &:last-child {
+      border: none;
+       margin-bottom: 0;
+       padding-bottom: 0;
+     }
+   }
+}

@@ -1,0 +1,16 @@
+.events_list__popup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: #fff;
+  height: auto;
+  z-index: 1000001;
+
+  ul {
+    background: #fff;
+    li {
+      background: #fff;
+
+    }
+  }
+}

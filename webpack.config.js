@@ -111,7 +111,8 @@ module.exports = env => {
                   require('postcss-simple-vars')({
                     variables: {
                       mobile: '1023px',
-                      'mobile-sm': '640px'
+                      'mobile-sm': '640px',
+                      textBlue: '#0A4A6B',
                     },
                   }),
                   require('postcss-preset-env')({
