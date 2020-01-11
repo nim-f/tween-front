@@ -13,6 +13,7 @@ import { sagaErrorHandler } from '../helpers/error'
 import { REGISTER_ERROR, REGISTER_REQUEST, REGISTER_SUCCESS, registerRequest } from './register';
 import { tokenSelector } from './login';
 import { normalize, schema } from 'normalizr';
+import {generateActions} from '../helpers/actions';
 
 const event = new schema.Entity('events');
 const eventListSchema = [event];
@@ -23,30 +24,19 @@ const prefix = `${appName}/${moduleName}`
 const eventListUrl = `${BASE_URL}/events`
 const eventUrl = (id) => `${BASE_URL}/events/${id}`
 
-export const EVENTS_LIST_REQUEST = `${prefix}/EVENTS_LIST_REQUEST`
-export const EVENTS_LIST_SUCCESS = `${prefix}/EVENTS_LIST_SUCCESS`
-export const EVENTS_LIST_ERROR = `${prefix}/EVENTS_LIST_ERROR`
+export const EVENTS_LIST = generateActions(prefix, 'EVENTS_LIST')
+export const EDIT_EVENT = generateActions(prefix, 'EDIT_EVENT')
+export const CREATE_EVENT = generateActions(prefix, 'CREATE_EVENT')
+export const GET_EVENT = generateActions(prefix, 'GET_EVENT')
 
 export const SET_CURRENT_EVENT = `${prefix}/SET_CURRENT_EVENT`
-
-export const SAVE_EVENT_REQUEST = `${prefix}/SAVE_EVENT_REQUEST`
-export const SAVE_EVENT_SUCCESS = `${prefix}/SAVE_EVENT_SUCCESS`
-export const SAVE_EVENT_ERROR = `${prefix}/SAVE_EVENT_ERROR`
-
-export const CREATE_EVENT_REQUEST = `${prefix}/CREATE_EVENT_REQUEST`
-export const CREATE_EVENT_SUCCESS = `${prefix}/CREATE_EVENT_SUCCESS`
-export const CREATE_EVENT_ERROR = `${prefix}/CREATE_EVENT_ERROR`
-
-export const GET_EVENT_REQUEST = `${prefix}/GET_EVENT_REQUEST`
-export const GET_EVENT_SUCCESS = `${prefix}/GET_EVENT_SUCCESS`
-export const GET_EVENT_ERROR = `${prefix}/GET_EVENT_ERROR`
 
 /**
  * Action Creators
  * */
 
 export const eventsListAction = () => ({
-  type: EVENTS_LIST_REQUEST,
+  type: EVENTS_LIST.REQUEST,
 })
 
 export const setCurrentEventAction = (id) => ({
@@ -55,12 +45,17 @@ export const setCurrentEventAction = (id) => ({
 })
 
 export const createEventAction = (event) => ({
-  type: CREATE_EVENT_REQUEST,
+  type: CREATE_EVENT.REQUEST,
+  payload: event,
+})
+
+export const editEventAction = (event) => ({
+  type: EDIT_EVENT.REQUEST,
   payload: event,
 })
 
 export const getSingleEvent = id => ({
-  type: GET_EVENT_REQUEST,
+  type: GET_EVENT.REQUEST,
   payload: id
 })
 
@@ -79,17 +74,17 @@ const defaultState = {
 export default function reducer(state = defaultState, action) {
   const { type, payload } = action
   switch (type) {
-    case CREATE_EVENT_REQUEST:
+    case CREATE_EVENT.REQUEST:
       return { ...state, loading: true, error: null }
-    case CREATE_EVENT_SUCCESS:
+    case CREATE_EVENT.SUCCESS:
       return { ...state, loading: false, events: {...state.events, [payload.id]: payload, result: [...state.result, payload.id]}}
-    case EVENTS_LIST_REQUEST:
+    case EVENTS_LIST.REQUEST:
       return { ...state, loading: true, error: null }
-    case EVENTS_LIST_SUCCESS:
+    case EVENTS_LIST.SUCCESS:
       const {entities: { events }, result} = payload
       return { ...state, loading: false, error: null, events, result }
-    case EVENTS_LIST_ERROR:
-    case CREATE_EVENT_ERROR:
+    case EVENTS_LIST.ERROR:
+    case CREATE_EVENT.ERROR:
       return { ...state, loading: false, error: payload.error }
     case SET_CURRENT_EVENT:
       return {...state, currentId: payload}
@@ -133,6 +128,19 @@ export const createEventRequest = (event, token) => {
     }
   )
 }
+export const editEventRequest = (event, token) => {
+  console.log({event})
+  return fetchInstance.post(
+    eventUrl(event.id),
+    event,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `JWT ${token}`
+      }
+    }
+  )
+}
 
 export const getEventRequest = (id, token) => {
   return fetchInstance.get(
@@ -154,11 +162,11 @@ export function* eventsSaga({ payload }) {
     const token = yield select(tokenSelector)
     const reg = yield call(eventsListRequest, token)
     yield put({
-      type: EVENTS_LIST_SUCCESS,
+      type: EVENTS_LIST.SUCCESS,
       payload: normalize(reg, eventListSchema),
     })
   } catch (err) {
-    yield sagaErrorHandler({ type: EVENTS_LIST_ERROR, payload: err })
+    yield sagaErrorHandler({ type: EVENTS_LIST.ERROR, payload: err })
   }
 }
 
@@ -167,11 +175,24 @@ export function* createEventSaga({ payload }) {
     const token = yield select(tokenSelector)
     const event = yield call(createEventRequest, payload, token)
     yield put({
-      type: CREATE_EVENT_SUCCESS,
+      type: CREATE_EVENT.SUCCESS,
       payload: event,
     })
   } catch (err) {
-    yield sagaErrorHandler({ type: CREATE_EVENT_ERROR, payload: err })
+    yield sagaErrorHandler({ type: CREATE_EVENT.ERROR, payload: err })
+  }
+}
+
+export function* editEventSaga({ payload }) {
+  try {
+    const token = yield select(tokenSelector)
+    const event = yield call(editEventRequest, payload, token)
+    yield put({
+      type: EDIT_EVENT.SUCCESS,
+      payload: event,
+    })
+  } catch (err) {
+    yield sagaErrorHandler({ type: EDIT_EVENT.ERROR, payload: err })
   }
 }
 
@@ -181,18 +202,19 @@ export function* getEventSaga({ payload }) {
     const token = yield select(tokenSelector)
     const event = yield call(getEventRequest, payload, token)
     yield put({
-      type: GET_EVENT_SUCCESS,
+      type: GET_EVENT.SUCCESS,
       payload: event,
     })
   } catch (err) {
-    yield sagaErrorHandler({ type: GET_EVENT_ERROR, payload: err })
+    yield sagaErrorHandler({ type: GET_EVENT.ERROR, payload: err })
   }
 }
 
 export function* saga() {
   yield all([
-    takeEvery(EVENTS_LIST_REQUEST, eventsSaga),
-    takeEvery(CREATE_EVENT_REQUEST, createEventSaga),
-    takeEvery(GET_EVENT_REQUEST, getEventSaga),
+    takeEvery(EVENTS_LIST.REQUEST, eventsSaga),
+    takeEvery(CREATE_EVENT.REQUEST, createEventSaga),
+    takeEvery(EDIT_EVENT.REQUEST, editEventSaga),
+    takeEvery(GET_EVENT.REQUEST, getEventSaga),
   ])
 }

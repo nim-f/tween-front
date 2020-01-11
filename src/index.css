@@ -64,7 +64,7 @@ button, a {
 }
 
 .col__right {
-  padding: 40pr;
+  padding: 40pr 20pr;
   width: 100%;
 }
 
@@ -73,6 +73,7 @@ button, a {
 
   & > div {
     width: 50%;
+   padding: 0 20pr;
   }
 }
 

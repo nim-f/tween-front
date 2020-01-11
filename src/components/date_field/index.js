@@ -18,8 +18,8 @@ export default function DateInput(props) {
   const end = props.value && props.value.end ? DateTime.fromISO(props.value.end).toLocaleString()  : ''
 
   return (
-    <div className="date text_field">
-      { props.label ? <label>{props.label}</label> : null}
+    <div className="date text_field form_field">
+      { props.label ? <label className="form_label">{props.label}</label> : null}
       <ClickOutside callback={() => setOpen(false)}>
         <input value={`${ start } - ${end}`}
                readOnly

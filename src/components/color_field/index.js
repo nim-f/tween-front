@@ -24,8 +24,8 @@ class ColorField extends React.Component {
   render () {
     const {color} = this.state
     return (
-      <div className="color text_field">
-        { this.props.label ? <label>{this.props.label}</label> : null}
+      <div className="color text_field form_field">
+        { this.props.label ? <label className="form_label">{this.props.label}</label> : null}
         <div onClick={ this.handleClick }>
           <div className="color__swatch" style={{background: this.props.value}}/>
         </div>

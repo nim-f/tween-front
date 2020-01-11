@@ -1,0 +1,14 @@
+.Dropdown-control {
+  border-color: #DAE3ED;
+  color: #0A4A6B;
+  font-family: Roboto;
+  font-size: 16px;
+  line-height: 19px;
+}
+.Dropdown-option {
+  color: #0A4A6B;
+}
+
+.Dropdown-menu {
+  border-color: #DAE3ED;
+}

@@ -5,12 +5,17 @@
     font-size: 12pr;
     line-height: 14pr;
     color: #0079F2;
-    padding: 4pr;
+    padding: 0;
     width: 20pr;
     height: 20pr;
     border-radius: 0;
   }
 
+  &__day {
+    width: 20pr;
+    height: 20pr;
+    padding: 4pr;
+  }
   .DayPicker-Month {
     margin-left: 0;
     margin-right: 40pr;

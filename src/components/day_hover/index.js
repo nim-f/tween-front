@@ -1,11 +1,17 @@
 import React from 'react';
 import './day_hover.css'
 import { DateTime } from 'luxon';
+import { Link } from 'react-router-dom';
 
-export default function DayHover({events, position}) {
+export default function DayHover({events, position, onHoverChange}) {
 
   return (
-    <div className={'day__hover'} style={{top: position.y, left: position.x}}>
+    <div
+      className={'day__hover'}
+      style={{top: position.y, left: position.x}}
+      onMouseLeave={(e) => {onHoverChange(false); console.log('leave')}}
+      onMouseEnter={(e) => {onHoverChange(true);console.log('enter')}}
+    >
       {events.map(event => {
         if (!event) return null
         const start = DateTime.fromISO(event.start.value)
@@ -15,8 +21,13 @@ export default function DayHover({events, position}) {
 
 
         return (
-          <div className="day__hover__event">
-            <div className="popup__title">{event.title.value}</div>
+          <div
+            className="day__hover__event"
+
+          >
+            <div className="popup__title">
+              <Link to={`/event/${event.id}`}>{event.title.value}</Link>
+            </div>
             <div className="popup__info">
               Ready: <b>69%</b><br />
               {now < start ?

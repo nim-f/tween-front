@@ -15,5 +15,9 @@
     min-height: 161pr;
     max-width: 500pr;
     width: 100%;
+    padding: 20pr 20pr;
+    color: #0A4A6B;
+    font-size: 16pr;
+    line-height: 19pr;
   }
 }

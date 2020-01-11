@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import DayPicker from 'react-day-picker';
 import {connect} from 'react-redux'
 import { DateTime } from 'luxon';
@@ -29,6 +29,18 @@ const calendarSettings = {
     numberOfMonths: 3,
     month: new Date(new Date().getFullYear(), 9, 1),
   },
+  current: {
+    numberOfMonths: 1,
+    month: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+  },
+  prev: {
+    numberOfMonths: 1,
+    month: new Date(new Date().getFullYear(), new Date().getMonth() === 0 ? 11 : new Date().getMonth() - 1, 1),
+  },
+  next: {
+    numberOfMonths: 1,
+    month: new Date(new Date().getFullYear(), new Date().getMonth() === 11 ? 0 : new Date().getMonth() + 1, 1),
+  },
 }
 
 function Dashboard({events, list, history}) {
@@ -38,17 +50,24 @@ function Dashboard({events, list, history}) {
   const [hoverDayEvents, setHoverDayEvents] = useState([])
   const [selectedDay, setSelectedDay] = useState(null)
   const [popupPosition, setPopupPosition] = useState({x: 0, y: 0})
-  console.log({events})
+  const [popupHover, setPopupHover] = useState(false)
+  const [dayHover, setDayHover] = useState(false)
+
+  useEffect(() => {
+    console.log({dayHover, popupHover})
+    if (!dayHover && !popupHover) setHoverDayEvents([])
+  }, [popupHover])
 
   const onDayClick = (day, modifiers) => {
-    const dayString = `${day.getDate()}.${day.getMonth()}.${day.getFullYear()}`
+    const dayString = `${day.toLocaleString()}`
     setSelectedDay(dayString)
-    const dayEvents = Object.keys(modifiers).filter(key => key !== 'end' && key !== 'start')
+    const dayEvents = Object.keys(modifiers)
+      .filter(key => key !== 'end' && key !== 'start' && key !== 'outside')
+      .map(key => events[key])
     if (dayEvents.length > 1) {
       setDayEvents(dayEvents)
-      console.log({dayEvents})
     } else {
-      dayEvents[0] && history.push(`/event/${dayEvents[0]}`)
+      dayEvents[0] && history.push(`/event/${dayEvents[0].id}`)
     }
   }
 
@@ -73,17 +92,17 @@ function Dashboard({events, list, history}) {
     modifiers[`${event.id}`] = { after: start, before: end }
   })
 
-  // console.log('modifiersStyles', modifiersStyles)
-  // console.log('modifiers', modifiers)
-
   const renderDay = (day, modifiers) => {
-    const dayEvents = Object.keys(modifiers).filter(key => key !== 'end' && key !== 'start' && key !== 'outside').map(key => {
+    const currentEvents = Object.keys(modifiers).filter(key => key !== 'end' && key !== 'start' && key !== 'outside').map(key => {
       return events[key]
     })
     const date = day.getDate();
     return (
-      <div className="dashboard__day">
-        {dayEvents.map(event => {
+      <div className="dashboard__day"
+           onMouseEnter={(e) => onDayMouseEnter(day, modifiers, e)}
+           onMouseLeave={(e) => onDayMouseLeave(day, modifiers, e)}
+      >
+        {currentEvents.map(event => {
           if (event) {
             const start = DateTime.fromISO(event.start.value)
             const end = DateTime.fromISO(event.end.value)
@@ -102,14 +121,21 @@ function Dashboard({events, list, history}) {
     );
   }
   const onDayMouseEnter = (day, modifiers, e) => {
-    // console.log({positionX: e.clientX, positionY: e.clientY})
-    setPopupPosition({x: e.clientX , y:  e.clientY})
-    const dayEvents = Object.keys(modifiers).filter(key => key !== 'end' && key !== 'start').map(key => events[key])
-    setHoverDayEvents(dayEvents)
+    console.log('day enver', day)
+    setDayHover(true)
+    setPopupPosition({x: e.clientX-3 , y:  e.clientY-3})
+    const hoverEvents = Object.keys(modifiers).filter(key => key !== 'end' && key !== 'start').map(key => events[key])
+    setHoverDayEvents(hoverEvents)
   }
+
   const onDayMouseLeave = (day, modifiers, e) => {
-    setHoverDayEvents([])
+    console.log('day leave', day)
+
+    setDayHover(false)
+    if (popupHover) setHoverDayEvents([])
   }
+
+  console.log({popupHover})
   return (
     <div className="dashboard">
       <div className="filters">
@@ -137,6 +163,13 @@ function Dashboard({events, list, history}) {
         </div>
       </div>
 
+      {selectedDay && (
+        <div>
+          {selectedDay}
+          <EventsListPopup events={dayEvents} />
+        </div>
+      )}
+
       <DayPicker
         {...calendarSettings[filter]}
         modifiers={modifiers}
@@ -144,8 +177,6 @@ function Dashboard({events, list, history}) {
         onDayClick={onDayClick}
         pagedNavigation
         renderDay={renderDay}
-        onDayMouseEnter={onDayMouseEnter}
-        onDayMouseLeave={onDayMouseLeave}
       />
 
       <h2>Short status (year)</h2>
@@ -157,9 +188,12 @@ function Dashboard({events, list, history}) {
         @Chris Watts – Todo: 4, In progress: 3, Done: 14
       </p>
 
-      {console.log({hoverDayEvents})}
       {hoverDayEvents.length ?
-        <DayHover events={hoverDayEvents} position={popupPosition} />
+        <DayHover
+          events={hoverDayEvents}
+          position={popupPosition}
+          onHoverChange={setPopupHover}
+        />
         :
         null
       }

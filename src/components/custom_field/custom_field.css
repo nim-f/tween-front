@@ -1,0 +1,11 @@
+.custom__field {
+  position: relative;
+
+  .field__edit {
+    position: absolute;
+    left: calc(100% + 10px);
+    top: 25px;
+    width: 100px;
+  }
+
+}

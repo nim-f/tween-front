@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import TextField from 'components/text_field'
 import TextArea from 'components/textarea'
 import DateField from 'components/date_field'
@@ -6,22 +6,50 @@ import ColorField from 'components/color_field'
 import {connect} from 'react-redux'
 import { Form, Field } from 'react-final-form'
 import { userSelector } from '../../ducks/login'
-import { createEventAction } from '../../ducks/event'
+import { createEventAction, editEventAction } from '../../ducks/event'
 import { getRandomColor } from '../../helpers/color';
+import SelectField from '../select_field';
+import { FieldArray } from 'react-final-form-arrays'
+import arrayMutators from 'final-form-arrays'
+import CustomField from '../custom_field';
 
-function EventForm({currentUser, createEventAction, errors, initial}) {
-  console.log({initial})
+const fieldCategories = [
+  {value: 1, label: 'Text input'},
+  {value: 2, label: 'Textarea'},
+  {value: 3, label: 'Select'},
+  {value: 4, label: 'Checkbox'},
+]
+
+function EventForm({currentUser, createEventAction, editEventAction, errors, initial}) {
+  const [isFieldOpen, setIsFieldOpen] = useState(false)
+
   const initialValues = {}
   if (initial) {
     Object.keys(initial).forEach(key => {
+      if (key === 'customFields') return null
+      if (key === 'start') return null
+      if (key === 'end') return null
       const original = initial[key]
       initialValues[key] = original.value || original
     })
   }
-  
+
+  if (initial && initial.customFields) {
+    initialValues.customFields = initial.customFields.map(field => ({
+      ...field,
+      category: fieldCategories.find(opt => opt.value == field.category),
+      edit: false,
+    }))
+    initialValues.date = {end: initial.end.value, start: initial.start.value}
+  } else {
+    initialValues.customFields = []
+  }
+
+  console.log({initialValues})
+
   const onSubmit = values => {
-    const { date, ...rest } = values
-    const event = {}
+    const { date, id, _id, __v, customFields, ...rest } = values
+    const event = { id }
     Object.keys(rest).forEach(item => {
       event[item] = {
         value: rest[item],
@@ -37,6 +65,8 @@ function EventForm({currentUser, createEventAction, errors, initial}) {
       updated_by: currentUser.email,
     }
 
+    event.customFields = customFields.map(field => ({...field, category: field.category.value}))
+
     if (!event.color) {
       event.color = {
         value: getRandomColor(),
@@ -45,7 +75,11 @@ function EventForm({currentUser, createEventAction, errors, initial}) {
     }
     event.createdAt = Date.now()
 
-    createEventAction(event)
+    if (initial) {
+      editEventAction(event)
+    } else {
+      createEventAction(event)
+    }
   }
 
   const validate = values => {
@@ -55,13 +89,27 @@ function EventForm({currentUser, createEventAction, errors, initial}) {
     return localErrors
   }
 
+  const addCustomField = e => {
+    e.preventDefault()
+    setIsFieldOpen(true)
+  }
+
+  const searchUser = (e) => {
+
+  }
+
   return (
     <div>
+
       <Form
         onSubmit={onSubmit}
         validate={validate}
         initialValues={initialValues}
-        render={({ handleSubmit }) => (
+        mutators={{
+          // potentially other mutators could be merged here
+          ...arrayMutators
+        }}
+        render={({ handleSubmit, values }) => (
           <form onSubmit={handleSubmit}>
 
             <div className="form form__2col">
@@ -69,11 +117,14 @@ function EventForm({currentUser, createEventAction, errors, initial}) {
                 <Field
                   name="date"
                   render={({ input, meta }) => (
-                    <DateField
+                    <>
+
+                      <DateField
                       label="Event dates"
                       error={(meta.touched && meta.error && meta.error) || errors && errors.date}
                       {...input}
                     />
+                    </>
                   )}
                 />
                 <Field
@@ -132,6 +183,7 @@ function EventForm({currentUser, createEventAction, errors, initial}) {
                     />
                   )}
                 />
+
                 <Field
                   name="description"
                   render={({ input, meta }) => (
@@ -141,38 +193,57 @@ function EventForm({currentUser, createEventAction, errors, initial}) {
                     />
                   )}
                 />
-                {/*
 
-                <TextField
-                  label={`Event title (${props.users.find(item => {
-                      console.log(item)
-                      console.log(props.title.updated_at)
-                    }
-                  )}`}
-                  value={props.title.value}
-                  onChange={(e) => props.change('title', e.target.value)}
-                />
+                <FieldArray name="customFields">
+                  {({ fields }) => (
+                    <div>
+                      {fields.map((name, index) => {
+                        const field = values.customFields[index]
+                        return (
+                          <CustomField field={field} name={name} fieldCategories={fieldCategories} onEditToggle={() => {field.edit = !field.edit; console.log(field)}} />
+                        )
+                      })}
+                      <>
+                        <button className="button--link">save</button>
+                        <button className="button--link"
+                                onClick={(e) => { e.preventDefault(); console.log({values}); fields.push({ category: '', name: '', edit: true, value: '' })}}>add a field</button>
+                      </>
+                    </div>
+                  )}
 
- */}
-                <button className="button--link">save</button>
-                <button className="button--link">add a field</button>
+                </FieldArray>
+
               </div>
+
+
               <div>
-                <div className="text_field">
-                  <label>event local page:</label>
+                <div className="form_field">
+                  <label className="form_label">event local page:</label>
                   <a href="">https://local.acronis.com/events/arw-in-hockenheim</a>
                 </div>
-                {/*<TextField*/}
-                {/*  label="Event manager:"*/}
-                {/*  value={props.managerId}*/}
-                {/*  onChange={(e) => props.change('managerId', e.target.value)}*/}
-                {/*/>*/}
-                <div className="text_field">
-                  <label>event team:</label>
+                <Field
+                  name="managerId"
+                  render={({ input, meta }) => (
+                    <TextField
+                      // label="event manager"
+                      {...input}
+                    />
+                  )}
+                />
+
+                <TextField
+                  label="event manager"
+                  onChange={searchUser}
+                />
+
+                <div className="form_field">
+                  <label className="form_label">event team:</label>
                 </div>
               </div>
 
             </div>
+            <div>{console.log('re-render')}</div>
+
           </form>
         )}
       />
@@ -181,4 +252,4 @@ function EventForm({currentUser, createEventAction, errors, initial}) {
 }
 export default connect(state => ({
   currentUser: userSelector(state),
-}), { createEventAction })(EventForm)
+}), { createEventAction, editEventAction })(EventForm)
