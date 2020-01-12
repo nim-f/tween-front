@@ -123,7 +123,7 @@ function Dashboard({events, list, history}) {
   const onDayMouseEnter = (day, modifiers, e) => {
     console.log('day enver', day)
     setDayHover(true)
-    setPopupPosition({x: e.clientX-3 , y:  e.clientY-3})
+    setPopupPosition({x: e.clientX , y:  e.clientY})
     const hoverEvents = Object.keys(modifiers).filter(key => key !== 'end' && key !== 'start').map(key => events[key])
     setHoverDayEvents(hoverEvents)
   }

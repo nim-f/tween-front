@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import TextField from 'components/text_field'
 import TextArea from 'components/textarea'
 import DateField from 'components/date_field'
@@ -7,11 +7,13 @@ import {connect} from 'react-redux'
 import { Form, Field } from 'react-final-form'
 import { userSelector } from '../../ducks/login'
 import { createEventAction, editEventAction } from '../../ducks/event'
+import { usersSelector, getUsersAction } from '../../ducks/user'
 import { getRandomColor } from '../../helpers/color';
 import SelectField from '../select_field';
 import { FieldArray } from 'react-final-form-arrays'
 import arrayMutators from 'final-form-arrays'
 import CustomField from '../custom_field';
+import Autocomplete from '../autocomplete';
 
 const fieldCategories = [
   {value: 1, label: 'Text input'},
@@ -20,8 +22,12 @@ const fieldCategories = [
   {value: 4, label: 'Checkbox'},
 ]
 
-function EventForm({currentUser, createEventAction, editEventAction, errors, initial}) {
+function EventForm({currentUser, users, createEventAction, editEventAction, getUsersAction, errors, initial}) {
   const [isFieldOpen, setIsFieldOpen] = useState(false)
+
+  useEffect(() => {
+    getUsersAction()
+  }, [])
 
   const initialValues = {}
   if (initial) {
@@ -95,9 +101,15 @@ function EventForm({currentUser, createEventAction, editEventAction, errors, ini
   }
 
   const searchUser = (e) => {
-
+    getUsersAction(e)
   }
 
+  const selectManager = (user, form) => {
+    console.log('click')
+    form.mutators.setManagerId('managerId', user.id)
+    // setUserQuery(`${user.first_name} ${user.last_name}`)
+
+  }
   return (
     <div>
 
@@ -107,9 +119,14 @@ function EventForm({currentUser, createEventAction, editEventAction, errors, ini
         initialValues={initialValues}
         mutators={{
           // potentially other mutators could be merged here
+          setManagerId: ([name, id], state, { changeValue }) => {
+            console.log({id})
+            changeValue(state, name, () => id)
+            console.log('form.values', state)
+          },
           ...arrayMutators
         }}
-        render={({ handleSubmit, values }) => (
+        render={({ handleSubmit, values, form }) => (
           <form onSubmit={handleSubmit}>
 
             <div className="form form__2col">
@@ -226,14 +243,18 @@ function EventForm({currentUser, createEventAction, editEventAction, errors, ini
                   render={({ input, meta }) => (
                     <TextField
                       // label="event manager"
+                      hidden
                       {...input}
                     />
                   )}
                 />
-
-                <TextField
+                <Autocomplete
                   label="event manager"
+                  placeholder={'Type to add user'}
                   onChange={searchUser}
+                  list={users}
+                  managerId={values.managerId}
+                  onSelect={(user) => selectManager(user, form)}
                 />
 
                 <div className="form_field">
@@ -242,8 +263,6 @@ function EventForm({currentUser, createEventAction, editEventAction, errors, ini
               </div>
 
             </div>
-            <div>{console.log('re-render')}</div>
-
           </form>
         )}
       />
@@ -252,4 +271,5 @@ function EventForm({currentUser, createEventAction, editEventAction, errors, ini
 }
 export default connect(state => ({
   currentUser: userSelector(state),
-}), { createEventAction, editEventAction })(EventForm)
+  users: usersSelector(state),
+}), { createEventAction, editEventAction, getUsersAction })(EventForm)

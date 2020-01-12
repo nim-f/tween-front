@@ -1,0 +1,19 @@
+.ac {
+  position: relative;
+}
+
+.ac__options {
+  margin: 0;
+  padding: 10px;
+  position: absolute;
+  top: 52px;
+  background: #fff;
+  width: 100%;
+  border: 1px solid #DAE3ED;
+}
+
+.ac__not_found {
+  color: $textBlue;
+  font-size: 12px;
+  text-align: center;
+}

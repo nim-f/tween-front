@@ -74,8 +74,10 @@ const defaultState = {
 export default function reducer(state = defaultState, action) {
   const { type, payload } = action
   switch (type) {
+    case EDIT_EVENT.REQUEST:
     case CREATE_EVENT.REQUEST:
       return { ...state, loading: true, error: null }
+    case EDIT_EVENT.SUCCESS:
     case CREATE_EVENT.SUCCESS:
       return { ...state, loading: false, events: {...state.events, [payload.id]: payload, result: [...state.result, payload.id]}}
     case EVENTS_LIST.REQUEST:
@@ -84,6 +86,7 @@ export default function reducer(state = defaultState, action) {
       const {entities: { events }, result} = payload
       return { ...state, loading: false, error: null, events, result }
     case EVENTS_LIST.ERROR:
+    case EDIT_EVENT.ERROR:
     case CREATE_EVENT.ERROR:
       return { ...state, loading: false, error: payload.error }
     case SET_CURRENT_EVENT:
