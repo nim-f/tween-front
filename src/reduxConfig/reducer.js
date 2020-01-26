@@ -6,6 +6,7 @@ import loginReducer, { moduleName as loginModule } from '../ducks/login'
 import registerReducer, { moduleName as registerModule } from '../ducks/register'
 import eventReducer, { moduleName as eventModule } from '../ducks/event'
 import userReducer, { moduleName as userModule } from '../ducks/user'
+import attendeeReducer, { moduleName as attendeeModule } from '../ducks/attendee'
 
 export default history =>
   combineReducers({
@@ -14,5 +15,6 @@ export default history =>
     [registerModule]: registerReducer,
     [eventModule]: eventReducer,
     [userModule]: userReducer,
+    [attendeeModule]: attendeeReducer,
     notifications
   })

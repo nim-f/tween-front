@@ -10,8 +10,10 @@ html {
 body {
   padding: 0;
   margin: 0;
-  font-size: 16pr;
+  font-size: 16px;
+  line-height: 19px;
   font-family: Roboto, sans-serif;
+  color: #0A4A6B;
 }
 
 button, a {

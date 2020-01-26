@@ -12,10 +12,12 @@ import NewEvent from './pages/events/new_event'
 import Register from './pages/register'
 import Dashboard from './pages/dashboard'
 import Event from './pages/event'
+import AddAttendee from './pages/attendee'
 import createStore from 'reduxConfig'
 
 import Login from './pages/login'
 import Sidebar from './components/sidebar';
+import AttendeeList from './pages/attendee/list';
 const { store, history } = createStore()
 
 const App = () => (
@@ -39,6 +41,8 @@ const App = () => (
               <Route path="/login" component={Login}  />
               <Route path="/register" component={Register} />
               <Route path="/event/create" component={NewEvent} exact />
+              <Route path="/attendees/create" component={AddAttendee} exact />
+              <Route path="/attendees" component={AttendeeList} exact />
               <Route path="/event/:id" component={Event} exact />
               <Route path="/" component={Dashboard} exact />
             </Switch>

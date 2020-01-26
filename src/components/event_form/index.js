@@ -7,13 +7,13 @@ import {connect} from 'react-redux'
 import { Form, Field } from 'react-final-form'
 import { userSelector } from '../../ducks/login'
 import { createEventAction, editEventAction } from '../../ducks/event'
-import { usersSelector, getUsersAction } from '../../ducks/user'
 import { getRandomColor } from '../../helpers/color';
 import SelectField from '../select_field';
 import { FieldArray } from 'react-final-form-arrays'
 import arrayMutators from 'final-form-arrays'
 import CustomField from '../custom_field';
-import Autocomplete from '../autocomplete';
+import AddMembers from '../add_members';
+import { DateTime } from 'luxon';
 
 const fieldCategories = [
   {value: 1, label: 'Text input'},
@@ -22,13 +22,8 @@ const fieldCategories = [
   {value: 4, label: 'Checkbox'},
 ]
 
-function EventForm({currentUser, users, createEventAction, editEventAction, getUsersAction, errors, initial}) {
+function EventForm({currentUser, createEventAction, editEventAction, errors, initial}) {
   const [isFieldOpen, setIsFieldOpen] = useState(false)
-
-  useEffect(() => {
-    getUsersAction()
-  }, [])
-
   const initialValues = {}
   if (initial) {
     Object.keys(initial).forEach(key => {
@@ -79,11 +74,12 @@ function EventForm({currentUser, users, createEventAction, editEventAction, getU
         updated_by: currentUser.email,
       }
     }
-    event.createdAt = Date.now()
+    event.updatedAt = Date.now()
 
     if (initial) {
       editEventAction(event)
     } else {
+      event.createdAt = Date.now()
       createEventAction(event)
     }
   }
@@ -100,16 +96,6 @@ function EventForm({currentUser, users, createEventAction, editEventAction, getU
     setIsFieldOpen(true)
   }
 
-  const searchUser = (e) => {
-    getUsersAction(e)
-  }
-
-  const selectManager = (user, form) => {
-    console.log('click')
-    form.mutators.setManagerId('managerId', user.id)
-    // setUserQuery(`${user.first_name} ${user.last_name}`)
-
-  }
   return (
     <div>
 
@@ -119,15 +105,27 @@ function EventForm({currentUser, users, createEventAction, editEventAction, getU
         initialValues={initialValues}
         mutators={{
           // potentially other mutators could be merged here
-          setManagerId: ([name, id], state, { changeValue }) => {
-            console.log({id})
-            changeValue(state, name, () => id)
-            console.log('form.values', state)
+          setManagerId: ([id], state, { changeValue }) => {
+            changeValue(state, 'managerId', () => id)
+          },
+          deleteMembers: ([id], state, { changeValue }) => {
+            changeValue(state, 'teamIds', () => {
+              const { teamIds } = state.formState.values
+              return teamIds.filter(mId => mId !== id)
+            })
+          },
+          setMembers: ([id], state, { changeValue }) => {
+            changeValue(state, 'teamIds', () => {
+              const {teamIds} = state.formState.values
+              if (teamIds) return [...teamIds, id]
+              return [id]
+            })
           },
           ...arrayMutators
         }}
         render={({ handleSubmit, values, form }) => (
           <form onSubmit={handleSubmit}>
+            {console.log({values})}
 
             <div className="form form__2col">
               <div>
@@ -227,9 +225,7 @@ function EventForm({currentUser, users, createEventAction, editEventAction, getU
                       </>
                     </div>
                   )}
-
                 </FieldArray>
-
               </div>
 
 
@@ -238,30 +234,28 @@ function EventForm({currentUser, users, createEventAction, editEventAction, getU
                   <label className="form_label">event local page:</label>
                   <a href="">https://local.acronis.com/events/arw-in-hockenheim</a>
                 </div>
-                <Field
-                  name="managerId"
-                  render={({ input, meta }) => (
-                    <TextField
-                      // label="event manager"
-                      hidden
-                      {...input}
-                    />
-                  )}
-                />
-                <Autocomplete
-                  label="event manager"
-                  placeholder={'Type to add user'}
-                  onChange={searchUser}
-                  list={users}
+
+                <AddMembers
+                  deleteMember={form.mutators.deleteMembers}
+                  selectMember={form.mutators.setMembers}
+                  selectManager={form.mutators.setManagerId}
+                  members={values.teamIds}
                   managerId={values.managerId}
-                  onSelect={(user) => selectManager(user, form)}
                 />
+                {values.createdAt &&
+                  <div className="form_field">
+                    <label className="form_label">created:</label>
+                    <div>{DateTime.fromISO(values.createdAt).toLocaleString()}</div>
+                  </div>
+                }
+                {values.updatedAt &&
+                  <div className="form_field">
+                    <label className="form_label">profile updated:</label>
+                    <div>{DateTime.fromISO(values.updatedAt).toLocaleString()}</div>
+                  </div>
+                }
 
-                <div className="form_field">
-                  <label className="form_label">event team:</label>
-                </div>
               </div>
-
             </div>
           </form>
         )}
@@ -271,5 +265,4 @@ function EventForm({currentUser, users, createEventAction, editEventAction, getU
 }
 export default connect(state => ({
   currentUser: userSelector(state),
-  users: usersSelector(state),
-}), { createEventAction, editEventAction, getUsersAction })(EventForm)
+}), { createEventAction, editEventAction })(EventForm)

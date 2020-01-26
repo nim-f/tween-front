@@ -1,0 +1,18 @@
+.event__members {
+  margin-bottom: 32px;
+}
+
+.members__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    line-height: 26px;
+  }
+}
+
+.members__not_found {
+  line-height: 26px;
+
+}

@@ -1,13 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import './event_selector.css'
 import OutsideWrapper from 'components/click_outside_wrapper'
+import {
+  eventsListAction,
+  setCurrentEventAction,
+  eventsListSelector,
+  eventsSelector,
+  currentEventSelector
+} from '../../ducks/event';
+import {connect} from 'react-redux'
 
-const  EventSelector = (props) => {
-  console.log(props.list)
+const  EventSelector = ({events, list, current, setCurrentEventAction, eventsListAction}) => {
+  useEffect(() => {
+    eventsListAction()
+  }, [])
   const [isOpen, setOpen] = useState(false)
 
   const select = id => {
-    props.setCurrent(id)
+    setCurrentEventAction(id)
     setOpen(false)
   }
 
@@ -19,7 +29,7 @@ const  EventSelector = (props) => {
           <div className="event_selector__select" onClick={() => setOpen(!isOpen)}>
             <div className="event_selector__arrow" />
             <div className="event_selector__date">July 15-19, 2019 </div>
-            <div className="event_selector__title">{props.current && props.current.title.value}</div>
+            <div className="event_selector__title">{current && current.title.value}</div>
           </div>
 
           <div className="event_selector__tools">
@@ -29,8 +39,8 @@ const  EventSelector = (props) => {
           { isOpen ?
             <div className="event_selector__list">
               <ul>
-                {props.list.map(item => {
-                  return <li onClick={() => select(item)}>{props.events[item].title.value}</li>})}
+                {list.map(item => {
+                  return <li onClick={() => select(item)}>{events[item].title.value}</li>})}
               </ul>
             </div>
             : null }
@@ -43,4 +53,14 @@ const  EventSelector = (props) => {
 }
 
 
-export default EventSelector
+export default connect(
+  state => ({
+    list: eventsListSelector(state),
+    events: eventsSelector(state),
+    current: currentEventSelector(state)
+  }),
+  {
+    eventsListAction,
+    setCurrentEventAction
+  }
+)(EventSelector)

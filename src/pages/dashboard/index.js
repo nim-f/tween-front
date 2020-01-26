@@ -59,6 +59,7 @@ function Dashboard({events, list, history}) {
   }, [popupHover])
 
   const onDayClick = (day, modifiers) => {
+    console.log({modifiers})
     const dayString = `${day.toLocaleString()}`
     setSelectedDay(dayString)
     const dayEvents = Object.keys(modifiers)
@@ -93,9 +94,9 @@ function Dashboard({events, list, history}) {
   })
 
   const renderDay = (day, modifiers) => {
-    const currentEvents = Object.keys(modifiers).filter(key => key !== 'end' && key !== 'start' && key !== 'outside').map(key => {
+    const currentEvents = events ? Object.keys(modifiers).filter(key => key !== 'end' && key !== 'start' && key !== 'outside').map(key => {
       return events[key]
-    })
+    }) : []
     const date = day.getDate();
     return (
       <div className="dashboard__day"

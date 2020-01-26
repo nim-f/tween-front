@@ -10,7 +10,6 @@ import cookie from 'react-cookies'
 import { appName, BASE_URL } from '../config'
 import { fetchInstance } from '../helpers/fetch';
 import { sagaErrorHandler } from '../helpers/error'
-import { REGISTER_ERROR, REGISTER_REQUEST, REGISTER_SUCCESS, registerRequest } from './register';
 import { tokenSelector } from './login';
 import { normalize, schema } from 'normalizr';
 import {generateActions} from '../helpers/actions';
@@ -66,7 +65,7 @@ export const getSingleEvent = id => ({
 const defaultState = {
   events: {},
   result: [],
-  currentId: null,
+  currentId: cookie.load('current') || null,
   errors: null,
   loading: false,
 }
@@ -79,7 +78,7 @@ export default function reducer(state = defaultState, action) {
       return { ...state, loading: true, error: null }
     case EDIT_EVENT.SUCCESS:
     case CREATE_EVENT.SUCCESS:
-      return { ...state, loading: false, events: {...state.events, [payload.id]: payload, result: [...state.result, payload.id]}}
+      return { ...state, loading: false, events: {...state.events, [payload.id]: payload}, result: [...state.result, payload.id]}
     case EVENTS_LIST.REQUEST:
       return { ...state, loading: true, error: null }
     case EVENTS_LIST.SUCCESS:
@@ -181,6 +180,7 @@ export function* createEventSaga({ payload }) {
       type: CREATE_EVENT.SUCCESS,
       payload: event,
     })
+    yield put(push(`/event/${event.id}`))
   } catch (err) {
     yield sagaErrorHandler({ type: CREATE_EVENT.ERROR, payload: err })
   }
@@ -212,12 +212,18 @@ export function* getEventSaga({ payload }) {
     yield sagaErrorHandler({ type: GET_EVENT.ERROR, payload: err })
   }
 }
-
+export function* setCurrentSaga ({ payload }) {
+  try {
+    cookie.save('current', payload, {path: '/'})
+  }
+  catch (err) {}
+}
 export function* saga() {
   yield all([
     takeEvery(EVENTS_LIST.REQUEST, eventsSaga),
     takeEvery(CREATE_EVENT.REQUEST, createEventSaga),
     takeEvery(EDIT_EVENT.REQUEST, editEventSaga),
     takeEvery(GET_EVENT.REQUEST, getEventSaga),
+    takeEvery(SET_CURRENT_EVENT, setCurrentSaga),
   ])
 }
