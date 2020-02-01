@@ -113,6 +113,8 @@ module.exports = env => {
                       mobile: '1023px',
                       'mobile-sm': '640px',
                       textBlue: '#0A4A6B',
+                      poloBlue: '#80A6CC',
+                      botticelli: '#DAE3ED',
                     },
                   }),
                   require('postcss-preset-env')({

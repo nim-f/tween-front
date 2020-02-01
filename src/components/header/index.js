@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom'
 import {connect} from 'react-redux'
 import Avatar  from 'components/avatar'
@@ -8,6 +8,7 @@ import { tokenSelector, currentUserAction, userSelector } from '../../ducks/logi
 import { currentEventSelector, eventsListAction, eventsListSelector, eventsSelector, setCurrentEventAction } from '../../ducks/event';
 
 function Header({token, currentUserAction, eventsListAction, setCurrentEventAction, events, list, user, current})  {
+  const [dropdown, setDropdown] = useState(false)
   useEffect(() => {
     if (token) {
       currentUserAction()
@@ -25,9 +26,19 @@ function Header({token, currentUserAction, eventsListAction, setCurrentEventActi
         <EventSelector list={list} events={events} current={current} setCurrent={setCurrentEventAction} />
       </div>
       <nav className="header__line">
-        <ul>
-          <li>
-            <NavLink className="link--create" to={`/event/create`}>Create</NavLink>
+        <ul className="header__row">
+          <li className="header__item" onMouseEnter={() => setDropdown(true)} onMouseLeave={() => setDropdown(false)}>
+            <button className="link--create">Create</button>
+            { dropdown &&
+              <div className="dropdown">
+                <div className="dropdown__item">
+                  <NavLink to={`/event/create`}>Event</NavLink>
+                </div>
+                <div className="dropdown__item">
+                  <NavLink to={`/attendees/create`}>Attendees</NavLink>
+                </div>
+              </div>
+            }
           </li>
           {current &&
             <li>
@@ -35,7 +46,7 @@ function Header({token, currentUserAction, eventsListAction, setCurrentEventActi
             </li>
           }
           <li>
-            <NavLink to={`/`}>Workflow</NavLink>
+            <NavLink to={`/`} exact >Workflow</NavLink>
           </li>
           <li>
             <NavLink to={`/chat`}>Chat</NavLink>

@@ -5,6 +5,8 @@ import { ConnectedRouter } from 'connected-react-router'
 import { Provider } from 'react-redux'
 import './index.css'
 import 'react-day-picker/lib/style.css';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 
 import Header from 'components/header'
 import Notification from 'components/notification'
