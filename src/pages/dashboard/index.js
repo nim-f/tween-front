@@ -141,18 +141,6 @@ function Dashboard({events, list, history}) {
   return (
     <div className="dashboard">
       <div className="filters">
-        {/*<div className="filter--view">*/}
-        {/*  <label>Change view:</label>*/}
-        {/*  <button*/}
-        {/*    className={`button--filter ${view === 'overview' ? '-active' : '' }`}*/}
-        {/*    onClick={() => setView('overview')}*/}
-        {/*  >Overview</button>*/}
-        {/*  <button*/}
-        {/*    className={`button--filter ${view === 'tasks' ? '-active' : '' }`}*/}
-        {/*    onClick={() => setView('tasks')}*/}
-        {/*  >Tasks</button>*/}
-        {/*</div>*/}
-
         <Filter
           label="Change view"
           name="view"

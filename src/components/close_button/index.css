@@ -1,0 +1,8 @@
+.popup__close {
+  width: 30px;
+  height: 30px;
+  background: #BDBDBD;
+  position: absolute;
+  top: 0;
+  left: 0;
+}

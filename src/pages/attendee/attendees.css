@@ -1,0 +1,10 @@
+.attendees__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.attendees__filter {
+  display: flex;
+  align-items: center;
+
+}

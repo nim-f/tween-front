@@ -111,6 +111,10 @@ input {
   color: red;
 }
 
+.box {
+  margin-bottom: 20px;
+}
+
 /******* Tables ******/
 .table thead th {
   color: $poloBlue;
@@ -124,4 +128,17 @@ input {
 
 table td {
   color: $textBlue;
+}
+
+.table_block {
+  display: flex;
+}
+
+/****** Titles ******/
+
+h2 {
+  margin: 20px 0;
+  font-size: 20px;
+  line-height: 23px;
+  font-weight: bold;
 }

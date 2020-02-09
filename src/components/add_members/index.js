@@ -26,14 +26,16 @@ function AddMembers({members, users, filtered, usersMap, deleteMember, selectMem
           />
         )}
       />
-      <Autocomplete
-        label="event manager"
-        placeholder={'Type to add user'}
-        onChange={searchUser}
-        list={filtered || users}
-        managerId={managerId}
-        onSelect={(user) => selectManager(user)}
-      />
+      <div className="form_field">
+        <Autocomplete
+          label="event manager"
+          placeholder={'Type to add user'}
+          onChange={searchUser}
+          list={filtered || users}
+          managerId={managerId}
+          onSelect={(user) => selectManager(user)}
+        />
+      </div>
       <div className="form_field">
         <label className="form_label">event team:</label>
         {members && members.map(member => (

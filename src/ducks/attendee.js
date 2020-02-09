@@ -17,9 +17,13 @@ export const moduleName = 'attendee'
 const prefix = `${appName}/${moduleName}`
 
 const attendeeUrl = (eventId) => `${BASE_URL}/attendees?event=${eventId}`
+const attendeeFieldUrl = `${BASE_URL}/attendees/field`
+const fieldsUrl = (eventId) => `${BASE_URL}/attendees/field?event=${eventId}`
 
 const ADD_ATTENDEE = generateActions(prefix, 'ADD_ATTENDEE')
+const ADD_ATTENDEE_FIELD = generateActions(prefix, 'ADD_ATTENDEE_FIELD')
 const GET_LIST = generateActions(prefix, 'GET_LIST')
+const GET_FIELDS = generateActions(prefix, 'GET_FIELDS')
 
 /**
  * Action Creators
@@ -29,9 +33,19 @@ export const addAttendeeAction = (attendee) => ({
   payload: attendee
 })
 
-export const getListActions = (eventId) => ({
+export const getListAction = (eventId) => ({
   type: GET_LIST.REQUEST,
   payload: eventId
+})
+
+export const getFieldsAction = (eventId) => ({
+  type: GET_FIELDS.REQUEST,
+  payload: eventId
+})
+
+export const addAttendeeFieldAction = (eventId, field, resolve, reject) => ({
+  type: ADD_ATTENDEE_FIELD.REQUEST,
+  payload: {eventId, field, resolve, reject}
 })
 
 /**
@@ -40,6 +54,7 @@ export const getListActions = (eventId) => ({
 
 const defaultState = {
   attendees: {},
+  fields: [],
   errors: null,
   loading: false,
 }
@@ -55,10 +70,19 @@ export default function reducer(state = defaultState, action) {
       return {...state, loading: false, attendees: payload}
     case ADD_ATTENDEE.SUCCESS:
       return {...state, loading: false, attendees: {...state.attendees}}
+    case ADD_ATTENDEE_FIELD.REQUEST:
+      return {...state, loading: true}
+    case ADD_ATTENDEE_FIELD.SUCCESS:
+      return {...state, loading: false, fields: [...state.fields, payload]}
+    case GET_FIELDS.REQUEST:
+      return {...state, loading: true}
+    case GET_FIELDS.SUCCESS:
+      return {...state, loading: false, fields: payload}
     case ADD_ATTENDEE.ERROR:
     case GET_LIST.ERROR:
+    case ADD_ATTENDEE_FIELD.ERROR:
+    case GET_FIELDS.ERROR:
       return {...state, loading: false}
-
     default:
       return {...state}
   }
@@ -71,6 +95,8 @@ export default function reducer(state = defaultState, action) {
 export const attendeeListSelector = state => {
   return objToArray(state[moduleName].attendees)
 }
+export const fieldsSelector = state => state[moduleName].fields
+
 /**
  * Requests
  * */
@@ -97,7 +123,30 @@ const getListRequest = (token, eventId) => {
       }
     }
   )
+}
+const getFieldsRequest = (token, eventId) => {
+  return fetchInstance.get(
+    fieldsUrl(eventId),
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `JWT ${token}`
+      }
+    }
+  )
+}
 
+const addFieldRequest = (token, eventId, field) => {
+  return fetchInstance.post(
+    attendeeFieldUrl,
+    {event_id: eventId, ...field},
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `JWT ${token}`
+      }
+    }
+  )
 }
 
 /**
@@ -117,6 +166,22 @@ export function* addAttendeeSaga ({payload}) {
 
   }
 }
+export function* addFieldSaga ({payload}) {
+  try {
+    const token = yield select(tokenSelector)
+    const field = yield call(addFieldRequest, token, payload.eventId, payload.field)
+
+    yield put({
+      type: ADD_ATTENDEE_FIELD.SUCCESS,
+      payload: field
+    })
+    payload.resolve()
+  } catch(err) {
+    payload.reject()
+
+  }
+}
+
 export function* getListSaga ({payload}) {
   try {
     const token = yield select(tokenSelector)
@@ -130,10 +195,25 @@ export function* getListSaga ({payload}) {
 
   }
 }
+export function* getFieldsSaga ({payload}) {
+  try {
+    const token = yield select(tokenSelector)
+    const fields = yield call(getFieldsRequest, token, payload)
+
+    yield put({
+      type: GET_FIELDS.SUCCESS,
+      payload: fields
+    })
+  } catch(err) {
+
+  }
+}
 
 export function* saga() {
   yield all([
     takeEvery(ADD_ATTENDEE.REQUEST, addAttendeeSaga),
-    takeEvery(GET_LIST.REQUEST, getListSaga)
+    takeEvery(ADD_ATTENDEE_FIELD.REQUEST, addFieldSaga),
+    takeEvery(GET_LIST.REQUEST, getListSaga),
+    takeEvery(GET_FIELDS.REQUEST, getFieldsSaga)
   ])
 }

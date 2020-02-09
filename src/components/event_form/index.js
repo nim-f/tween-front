@@ -129,103 +129,120 @@ function EventForm({currentUser, createEventAction, editEventAction, errors, ini
 
             <div className="form form__2col">
               <div>
-                <Field
-                  name="date"
-                  render={({ input, meta }) => (
-                    <>
-
-                      <DateField
-                      label="Event dates"
-                      error={(meta.touched && meta.error && meta.error) || errors && errors.date}
-                      {...input}
-                    />
-                    </>
-                  )}
-                />
-                <Field
-                  name="color"
-                  render={({ input, meta }) => (
-                    <ColorField
-                      label="Color"
-                      error={(meta.touched && meta.error && meta.error) || errors && errors.color}
-                      {...input}
-                    />
-                  )}
-                />
-                <Field
-                  name="title"
-                  render={({ input, meta }) => (
-                    <TextField
-                      label="Event title"
-                      error={(meta.touched && meta.error && meta.error) || errors && errors.title}
-                      {...input}
-                    />
-                  )}
-                />
-                <Field
-                  name="subtitle"
-                  render={({ input, meta }) => (
-                    <TextArea
-                      label="Event subtitle"
-                      {...input}
-                    />
-                  )}
-                />
-                <Field
-                  name="venue"
-                  render={({ input, meta }) => (
-                    <TextField
-                      label="Venue"
-                      {...input}
-                    />
-                  )}
-                />
-                <Field
-                  name="lpLink"
-                  render={({ input, meta }) => (
-                    <TextField
-                      label="link to lp"
-                      {...input}
-                    />
-                  )}
-                />
-                <Field
-                  name="surveyLink"
-                  render={({ input, meta }) => (
-                    <TextField
-                      label="link to survey"
-                      {...input}
-                    />
-                  )}
-                />
-
-                <Field
-                  name="description"
-                  render={({ input, meta }) => (
-                    <TextArea
-                      label="Description"
-                      {...input}
-                    />
-                  )}
-                />
-
-                <FieldArray name="customFields">
-                  {({ fields }) => (
-                    <div>
-                      {fields.map((name, index) => {
-                        const field = values.customFields[index]
-                        return (
-                          <CustomField field={field} name={name} fieldCategories={fieldCategories} onEditToggle={() => {field.edit = !field.edit; console.log(field)}} />
-                        )
-                      })}
+                <div className="form_field">
+                  <Field
+                    name="date"
+                    render={({ input, meta }) => (
                       <>
-                        <button className="button--link">save</button>
-                        <button className="button--link"
-                                onClick={(e) => { e.preventDefault(); console.log({values}); fields.push({ category: '', name: '', edit: true, value: '' })}}>add a field</button>
+
+                        <DateField
+                          label="Event dates"
+                          error={(meta.touched && meta.error && meta.error) || errors && errors.date}
+                          {...input}
+                        />
                       </>
-                    </div>
-                  )}
-                </FieldArray>
+                    )}
+                  />
+                </div>
+                <div className="form_field">
+                  <Field
+                    name="color"
+                    render={({ input, meta }) => (
+                      <ColorField
+                        label="Color"
+                        error={(meta.touched && meta.error && meta.error) || errors && errors.color}
+                        {...input}
+                      />
+                    )}
+                  />
+                </div>
+                <div className="form_field">
+                  <Field
+                    name="title"
+                    render={({ input, meta }) => (
+                      <TextField
+                        label="Event title"
+                        error={(meta.touched && meta.error && meta.error) || errors && errors.title}
+                        {...input}
+                      />
+                    )}
+                  />
+                </div>
+                <div className="form_field">
+                  <Field
+                    name="subtitle"
+                    render={({ input, meta }) => (
+                      <TextArea
+                        label="Event subtitle"
+                        {...input}
+                      />
+                    )}
+                  />
+                </div>
+                <div className="form_field">
+                  <Field
+                    name="venue"
+                    render={({ input, meta }) => (
+                      <TextField
+                        label="Venue"
+                        {...input}
+                      />
+                    )}
+                  />
+                </div>
+                <div className="form_field">
+                  <Field
+                    name="lpLink"
+                    render={({ input, meta }) => (
+                      <TextField
+                        label="link to lp"
+                        {...input}
+                      />
+                    )}
+                  />
+                </div>
+                <div className="form_field">
+                  <Field
+                    name="surveyLink"
+                    render={({ input, meta }) => (
+                      <TextField
+                        label="link to survey"
+                        {...input}
+                      />
+                    )}
+                  />
+                </div>
+
+                <div className="form_field">
+                  <Field
+                    name="description"
+                    render={({ input, meta }) => (
+                      <TextArea
+                        label="Description"
+                        {...input}
+                      />
+                    )}
+                  />
+                </div>
+                <div className="form_field">
+                  <FieldArray name="customFields">
+                    {({ fields }) => (
+                      <div>
+                        {fields.map((name, index) => {
+                          const field = values.customFields[index]
+                          return (
+                            <CustomField field={field} name={name} fieldCategories={fieldCategories} onEditToggle={() => {field.edit = !field.edit; console.log(field)}} />
+                          )
+                        })}
+                        <>
+                          <button className="button--link">save</button>
+                          <button className="button--link"
+                                  onClick={(e) => { e.preventDefault(); console.log({values}); fields.push({ category: '', name: '', edit: true, value: '' })}}>add a field</button>
+                        </>
+                      </div>
+                    )}
+                  </FieldArray>
+                </div>
               </div>
 
 

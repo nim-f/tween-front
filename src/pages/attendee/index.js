@@ -19,34 +19,39 @@ function AddAttendee({currentEvent, error, addAttendeeAction}) {
         validate={validate}
         render={({ handleSubmit, values, form }) => (
           <form onSubmit={handleSubmit}>
-            <Field
-              name="email"
-              render={({ input, meta }) => (
-                <TextField
-                  label="Email"
-                  error={(meta.touched && meta.error && meta.error) || error && error.email}
-                  {...input} />
-              )}
-            />
-            <Field
-              name="first_name"
-              render={({ input, meta }) => (
-                <TextField
-                  label="First name"
-                  error={(meta.touched && meta.error && meta.error) || error && error.first_name}
-                  {...input} />
-              )}
-            />
-
-            <Field
-              name="last_name"
-              render={({ input, meta }) => (
-                <TextField
-                  label="Last name"
-                  error={(meta.touched && meta.error && meta.error) || error && error.last_name}
-                  {...input} />
-              )}
-            />
+            <div className="form_field">
+              <Field
+                name="email"
+                render={({ input, meta }) => (
+                  <TextField
+                    label="Email"
+                    error={(meta.touched && meta.error && meta.error) || error && error.email}
+                    {...input} />
+                )}
+              />
+            </div>
+            <div className="form_field">
+              <Field
+                name="first_name"
+                render={({ input, meta }) => (
+                  <TextField
+                    label="First name"
+                    error={(meta.touched && meta.error && meta.error) || error && error.first_name}
+                    {...input} />
+                )}
+              />
+            </div>
+            <div className="form_field">
+              <Field
+                name="last_name"
+                render={({ input, meta }) => (
+                  <TextField
+                    label="Last name"
+                    error={(meta.touched && meta.error && meta.error) || error && error.last_name}
+                    {...input} />
+                )}
+              />
+            </div>
 
             <div className="form_field">
               <label className="form_label">
@@ -69,24 +74,28 @@ function AddAttendee({currentEvent, error, addAttendeeAction}) {
                 />
               </label>
             </div>
-            <Field
-              name="type"
-              render={({ input, meta }) => (
-                <TextField
-                  label="Type"
-                  error={(meta.touched && meta.error && meta.error) || error && error.type}
-                  {...input} />
-              )}
-            />
-            <Field
-              name="title"
-              render={({ input, meta }) => (
-                <TextField
-                  label="Title"
-                  error={(meta.touched && meta.error && meta.error) || error && error.title}
-                  {...input} />
-              )}
-            />
+            <div className="form_field">
+              <Field
+                name="type"
+                render={({ input, meta }) => (
+                  <TextField
+                    label="Type"
+                    error={(meta.touched && meta.error && meta.error) || error && error.type}
+                    {...input} />
+                )}
+              />
+            </div>
+            <div className="form_field">
+              <Field
+                name="title"
+                render={({ input, meta }) => (
+                  <TextField
+                    label="Title"
+                    error={(meta.touched && meta.error && meta.error) || error && error.title}
+                    {...input} />
+                )}
+              />
+            </div>
             <button className="button--link">save</button>
 
           </form>
