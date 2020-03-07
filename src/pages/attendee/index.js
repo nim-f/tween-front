@@ -1,11 +1,17 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { Field, Form } from 'react-final-form';
 import TextField from '../../components/text_field';
 import {connect} from 'react-redux'
-import {addAttendeeAction} from '../../ducks/attendee';
+import { addAttendeeAction, fieldsSelector, getFieldsAction } from '../../ducks/attendee';
 import { currentEventSelector } from '../../ducks/event';
+import SelectField from '../../components/select_field';
 
-function AddAttendee({currentEvent, error, addAttendeeAction}) {
+function AddAttendee({currentEvent, error, addAttendeeAction, getFieldsAction, fields}) {
+  console.log({fields})
+  useEffect(() => {
+    getFieldsAction(currentEvent)
+  }, [])
+
   const onSubmit = (values) => {
     addAttendeeAction({...values, event: currentEvent})
   }
@@ -96,6 +102,64 @@ function AddAttendee({currentEvent, error, addAttendeeAction}) {
                 )}
               />
             </div>
+
+            {fields.map((field, index) => {
+              switch (field.category) {
+                case 1:
+                  return (
+                    <Field
+                      name={`custom_fields.${field.slug}`}
+                      render={({ input, meta }) => (
+                        <TextField
+                          label={field.name}
+                          error={(meta.touched && meta.error && meta.error) || error && error[field.name]}
+                          {...input} />
+                      )}
+                    />
+                  )
+                case 2:
+                  return (
+                    <Field
+                      name={`custom_fields.${field.slug}`}
+                      render={({ input, meta }) => (
+                        <SelectField
+                          options={field.options}
+                          label={field.name}
+                          error={(meta.touched && meta.error && meta.error) || error && error.category}
+                          selected={values.category}
+                          {...input} />
+                      )}
+                    />
+                  )
+                case 3:
+                  return (
+                    <label>
+                      <span>{field.name}</span>
+                    <Field
+                      name={`custom_fields.${field.slug}`}
+                      type="checkbox"
+                      component="input"
+                    />
+                    </label>
+                  )
+                default:
+                  return null
+              }
+              if (field.category === 1) {
+                return (
+                  <Field
+                    name="title"
+                    render={({ input, meta }) => (
+                      <TextField
+                        label="Title"
+                        error={(meta.touched && meta.error && meta.error) || error && error.title}
+                        {...input} />
+                    )}
+                  />
+                )
+              }
+
+            })}
             <button className="button--link">save</button>
 
           </form>
@@ -108,7 +172,8 @@ function AddAttendee({currentEvent, error, addAttendeeAction}) {
 
 export default connect(
   state => ({
-    currentEvent: state.event.currentId
+    currentEvent: state.event.currentId,
+    fields: fieldsSelector(state)
   }),
-  { addAttendeeAction }
+  { addAttendeeAction, getFieldsAction }
 )(AddAttendee)

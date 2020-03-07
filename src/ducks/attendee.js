@@ -19,18 +19,24 @@ const prefix = `${appName}/${moduleName}`
 const attendeeUrl = (eventId) => `${BASE_URL}/attendees?event=${eventId}`
 const attendeeFieldUrl = `${BASE_URL}/attendees/field`
 const fieldsUrl = (eventId) => `${BASE_URL}/attendees/field?event=${eventId}`
+const addAttendeeUrl = id => `${BASE_URL}/attendees/${id}`
 
 const ADD_ATTENDEE = generateActions(prefix, 'ADD_ATTENDEE')
 const ADD_ATTENDEE_FIELD = generateActions(prefix, 'ADD_ATTENDEE_FIELD')
 const GET_LIST = generateActions(prefix, 'GET_LIST')
 const GET_FIELDS = generateActions(prefix, 'GET_FIELDS')
-
+const EDIT_ATTENDEE = generateActions(prefix, 'EDIT_ATTENDEE')
 /**
  * Action Creators
  * */
 export const addAttendeeAction = (attendee) => ({
   type: ADD_ATTENDEE.REQUEST,
   payload: attendee
+})
+
+export const editAttendeeAction = (id, attendee, callback) => ({
+  type: EDIT_ATTENDEE.REQUEST,
+  payload: {id, attendee, callback}
 })
 
 export const getListAction = (eventId) => ({
@@ -74,6 +80,17 @@ export default function reducer(state = defaultState, action) {
       return {...state, loading: true}
     case ADD_ATTENDEE_FIELD.SUCCESS:
       return {...state, loading: false, fields: [...state.fields, payload]}
+    case EDIT_ATTENDEE.SUCCESS:
+      return {
+        ...state,
+        attendees: {
+          ...state.attendees,
+          [payload.id]: {
+            ...state.attendees[payload.id],
+            ...payload.attendee
+          }
+        }
+      }
     case GET_FIELDS.REQUEST:
       return {...state, loading: true}
     case GET_FIELDS.SUCCESS:
@@ -102,7 +119,7 @@ export const fieldsSelector = state => state[moduleName].fields
  * */
 const attendeeRequest = (token, attendee) => {
   return fetchInstance.post(
-    attendeeUrl,
+    attendeeUrl(event),
     attendee,
     {
       headers: {
@@ -112,6 +129,18 @@ const attendeeRequest = (token, attendee) => {
     }
   )
 }
+
+const editAttendeeRequest = (token, id, attendee) =>
+  fetchInstance.post(
+    addAttendeeUrl(id),
+    attendee,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `JWT ${token}`
+      }
+    }
+  )
 
 const getListRequest = (token, eventId) => {
   return fetchInstance.get(
@@ -166,6 +195,20 @@ export function* addAttendeeSaga ({payload}) {
 
   }
 }
+export function* editAttendeeSaga ({payload}) {
+  try {
+    const token = yield select(tokenSelector)
+    const attendee = yield call(editAttendeeRequest, token, payload.id, payload.attendee)
+    payload.callback()
+    yield put({
+      type: EDIT_ATTENDEE.SUCCESS,
+      payload: {id: payload.id, attendee }
+    })
+  } catch(err) {
+    console.error(err)
+    payload.callback(false)
+  }
+}
 export function* addFieldSaga ({payload}) {
   try {
     const token = yield select(tokenSelector)
@@ -212,6 +255,7 @@ export function* getFieldsSaga ({payload}) {
 export function* saga() {
   yield all([
     takeEvery(ADD_ATTENDEE.REQUEST, addAttendeeSaga),
+    takeEvery(EDIT_ATTENDEE.REQUEST, editAttendeeSaga),
     takeEvery(ADD_ATTENDEE_FIELD.REQUEST, addFieldSaga),
     takeEvery(GET_LIST.REQUEST, getListSaga),
     takeEvery(GET_FIELDS.REQUEST, getFieldsSaga)

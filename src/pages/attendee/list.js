@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import {connect} from 'react-redux'
 import BootstrapTable from 'react-bootstrap-table-next';
+import cellEditFactory from 'react-bootstrap-table2-editor';
+
 import Modal from 'react-modal'
-import { attendeeListSelector, getListAction, getFieldsAction, fieldsSelector } from '../../ducks/attendee';
+import { attendeeListSelector, getListAction, getFieldsAction, fieldsSelector, editAttendeeAction } from '../../ducks/attendee';
 import Filter from '../../components/filter';
 import SearchField from '../../components/search_field';
 import './attendees.css'
@@ -10,7 +12,7 @@ import Tip from '../../components/tip';
 import CloseButton from '../../components/close_button';
 import AttendeeFieldForm from '../../components/attendee_field_form';
 
-function AttendeeList({attendees, currentEvent, getListAction, getFieldsAction, fields}) {
+function AttendeeList({attendees, currentEvent, getListAction, getFieldsAction, editAttendeeAction, fields}) {
 
   useEffect(() => {
     getListAction(currentEvent)
@@ -24,10 +26,12 @@ function AttendeeList({attendees, currentEvent, getListAction, getFieldsAction, 
 
   const customColumns = fields
     .filter(f => f.is_in_table)
-    .map(f => ({
-      dataField: f.name,
-      text: f.value
+    .map((f, index) => ({
+      dataField: `custom_fields.${index}.${f.slug}`,
+      text: f.name
     }))
+
+  console.log({customColumns})
 
   const columns = [
     {
@@ -108,6 +112,19 @@ function AttendeeList({attendees, currentEvent, getListAction, getFieldsAction, 
           keyField='id'
           data={ attendees }
           columns={ columns }
+          cellEdit={ cellEditFactory({
+            mode: 'dbclick',
+            beforeSaveCell(oldValue, newValue, row, column, done) {
+              console.log({row, oldValue, newValue, column})
+
+              if (oldValue !== newValue) {
+                editAttendeeAction(row.id, {[column.dataField]: newValue}, done)
+              } else {
+                done(false)
+              }
+              return { async: true };
+            }
+          }) }
         />
         <div className="add_column">
           <button onClick={() => setFieldOpen(true)}>Add column</button>
@@ -148,5 +165,6 @@ export default connect(
   {
     getListAction,
     getFieldsAction,
+    editAttendeeAction
   }
 )(AttendeeList)

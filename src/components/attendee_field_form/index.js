@@ -29,10 +29,10 @@ function AttendeeFieldForm({error, eventId, column, addAttendeeFieldAction, onSu
           <form onSubmit={(e) => handleSubmit(e).then(onSuccess)}>
             <div className="form_field">
               <Field
-                name="name"
+                name="slug"
                 render={({ input, meta }) => (
                   <TextField
-                    label="ID"
+                    label="Slug"
                     error={(meta.touched && meta.error && meta.error) || error && error.name}
                     {...input} />
                 )}
@@ -40,7 +40,7 @@ function AttendeeFieldForm({error, eventId, column, addAttendeeFieldAction, onSu
             </div>
             <div className="form_field">
               <Field
-                name="value"
+                name="name"
                 render={({ input, meta }) => (
                   <TextField
                     label="name"
